@@ -20,8 +20,6 @@ Puresharp is a nuget package offering various features useful for designing a he
 
 ### Dependency Injection Container
 
-
-
 #### Preview
 
 Example of interfaces to configure
@@ -85,6 +83,16 @@ _note : module is IDisposable and crontrol lifecycle for all dependencies._
 
 - **How is managed lifecycle for dependencies?** 
 _When a module is setup into composition, instantiation mode is required and can be **Singleton** (a single instance with a lifecycle related to container), **Multiton** (a new instance for each module with lifecycle related to module itself) or **Volatile** (always a new instance with lifecycle related to owner module). Container and Module are both IDisposable to release created components._
+
+- **Why using lambda expression to configure instead of classic generic parameter?** 
+_Lambda expression offer a way to target constructor to use, specify when to use dependencies or not and capture constant._
+
+- **How dependency is configured?** 
+_Simply use Metadata<T>.Value into lambda expression when configuring a component._
+
+- **Is constructor injection prevent cyclic reference betwwen component?** 
+_No, cyclic references are a feature. When an instance is created, it is not really the case, a lazy proxy instance is prepared to minimize unused resources retention and allow cyclic references._
+
 
 
 ### Aspect Oriented Programming
