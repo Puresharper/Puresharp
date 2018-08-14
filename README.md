@@ -1,14 +1,14 @@
 
 
 # Puresharp API .NET 4.0+
-Puresharp is a set of features for .NET 4.5.2+ to help to build a software architecture as cleaner as possible without sacrificing performance.
+Puresharp is a set of features for .NET 4.5.2+ to improve productivity by producing flexible and efficient applications.
 
-## Purpose
+## Overview
+Puresharp mainly provides architectural tools to build the basics of professional applications :
 - Dependency Injection Container
 - Aspect Oriented Programming
 - Metadata Reflection API
 
-## Overview
 This framework is divided into 2 parts :
 - **IPuresharp** &nbsp;&nbsp;[![NuGet](https://img.shields.io/nuget/v/IPuresharp.svg)](https://www.nuget.org/packages/IPuresharp)
 
@@ -18,12 +18,80 @@ IPuresharp is a nuget package dedicated to rewrite assemblies (using **Mono.Ceci
 
 Puresharp is a nuget package offering various features useful for designing a healthy and productive architecture. This package also includes all the artillery to easily handle the elements that brings the IL writer IPuresharp. The nuget package add a library (Puresharp.dll) without any other depencies.
 
-## Preview
-_paste here preview code for DI container, AOP & reflection discovery_
-
-## FAQ
-
 ### Dependency Injection Container
+
+
+
+#### Preview
+
+Example of interfaces to configure
+
+    public interface IA
+    {
+    }
+
+    public interface IB
+    {
+    }
+
+    public interface IC
+    {
+    }
+    
+Example of implementations to bind to interfaces
+
+    public class A : IA
+    {
+        public A(IB b, IC c)
+        {
+        }
+    }
+
+    public class B : IB
+    {
+        public B(IC c, int constant)
+        {
+        }
+    }
+
+    public class C : IC
+    {
+    }
+
+Create a composition
+
+    var _composition = new Composition();
+
+Setup composition for IA, IB, IC whith respectivily A, B, C
+
+    _composition.Setup<IA>(() => new A(Metadata<IB>.Value, Metadata<IC>.Value), Instantiation.Multiton);
+    _composition.Setup<IB>(() => new B(Metadata<IC>.Value, 28), Instantiation.Multiton);
+    _composition.Setup<IC>(() => new C(), Instantiation.Multiton);
+    
+Create a container from composition setup
+
+    var _container = new Container(_composition);
+
+Instantiate a module of IA from container
+
+    using (var _module = _container.Module<IA>())
+    {
+        var _ia = _module.Value;
+    }
+    
+_note : module is IDisposable and crontrol lifecycle for all dependencies._
+
+#### FAQ
+
+- **How is managed lifecycle for dependencies?** 
+_When a module is setup into composition, instantiation mode is required and can be **Singleton** (a single instance with a lifecycle related to container), **Multiton** (a new instance for each module with lifecycle related to module itself) or **Volatile** (always a new instance with lifecycle related to owner module). Container and Module are both IDisposable to release created components._
+
+
+### Aspect Oriented Programming
+
+#### Preview
+
+#### FAQ
 
 _paste here the Di Container FAQ!_
 
