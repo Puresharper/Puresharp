@@ -258,8 +258,8 @@ _Async methods ares fully supported by injection and offer a way to intercept ea
 - [https://en.m.wikipedia.org/wiki/Domain-driven_design](https://en.m.wikipedia.org/wiki/Domain-driven_design)
 
 ## Contribution
-- Feedback is wellcome, don't hesitate to tell me if any improvements seems to be cool
-- Any pull request for patching or correct my bad english are wellcome too
+- Feedbacks are wellcome, don't hesitate to tell me if any improvements seems to be cool
+- Any pull requests for patching or correct my bad english are wellcome too
 - You can also donate to help financially maintain the project : **3D8txm4gMJDtti7tpcYnndLDfxpADkLggn**
 
 
