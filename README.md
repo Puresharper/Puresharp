@@ -236,8 +236,8 @@ _Yes, just be carefull about weaving order._
 - **How can I remove an Aspect from a Pointcut?** 
 _There is a **Release** method defined in **Aspect** to get rid of **Aspect** from **Pointcut**._
 
-- **Attributes are required to define Pointcut?** 
-_No, **Pointcut** can be define by directly inherits from **Pointcut** and implement the abstract method **Match** that take a **MethodBase** as single argument and return a boolean to indicate if a method is in **Pointcut** scope._
+- **Are attributes required to define Pointcut?** 
+_No, **Pointcut** can be defined by directly inherits from **Pointcut** and implement the abstract method **Match** that take a **MethodBase** as single argument and return a boolean to indicate if a method is in **Pointcut** scope._
 
 - **Why I have to use IPuresharp?** 
 _Interception is based on IPuresharp. Indeed IPuresharp add a build action to rewrite CIL to make assembly "Architect Friendly" by injecting transparents and hidden features to to grant full execution control at runtime._
