@@ -18,7 +18,7 @@ IPuresharp is a nuget package dedicated to rewrite assemblies (using **Mono.Ceci
 
 Puresharp is a nuget package offering various features useful for designing a healthy and productive architecture. This package also includes all the artillery to easily handle the elements that brings the IL writer IPuresharp. The nuget package add a library (Puresharp.dll) without any other depencies.
 
-_note : It is recommanded ti install **IPuresharp** nuget package in all projects and install **Puresharp** nuget package only in project where you explicitly need it._
+_note : It is recommanded to install **IPuresharp** nuget package in all projects and install **Puresharp** nuget package only in project where you explicitly need it._
 
 ### Dependency Injection Container
 
