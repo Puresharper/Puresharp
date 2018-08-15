@@ -1,6 +1,6 @@
 
 
-# Puresharp API .NET 4.0+
+# Puresharp API .NET 4.5.2+
 Puresharp is a set of features for .NET 4.5.2+ to improve productivity by producing flexible and efficient applications.
 
 ## Overview
