@@ -12,11 +12,11 @@ Puresharp mainly provides architectural tools to build the basics of professiona
 This framework is divided into 2 parts :
 - **IPuresharp** &nbsp;&nbsp;[![NuGet](https://img.shields.io/nuget/v/IPuresharp.svg)](https://www.nuget.org/packages/IPuresharp)
 
-IPuresharp is a nuget package dedicated to rewrite assemblies (using **Mono.Cecil**) to allow them to be highly customizable at runtime. IPuresharp won't add a new library reference to assmblies, but only include a post build process to automatically rewrite assemblies just after success build.
+IPuresharp is a nuget package dedicated to rewrite assemblies (using **[Mono.Cecil](https://github.com/jbevain/cecil)**) to allow them to be highly customizable at runtime. IPuresharp won't add a new library reference to assmblies, but only include a post build process to automatically rewrite assemblies just after success build.
 
     Install-Package IPuresharp -Version 3.1.2
 
-It can be used manually with command line to manage third party assemblies :
+It can be used manually with command line to manage third party assemblies
 
     IPuresharp.exe "FullnameToAssembly.dll"
 
