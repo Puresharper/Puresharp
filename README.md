@@ -89,7 +89,7 @@ Instantiate a module of IA from container
         var _ia = _module.Value;
     }
     
-_note : module is IDisposable and crontrol lifecycle for all dependencies._
+_note : module is [IDisposable](https://msdn.microsoft.com/en-us/library/system.idisposable(v=vs.110).aspx) and crontrol lifecycle for all dependencies._
 
 #### FAQ
 
@@ -252,15 +252,15 @@ _Generic types and methods ares fully supported by injection._
 _Async methods ares fully supported by injection and offer a way to intercept each asynchronous steps._
 
 ## More
-[https://en.m.wikipedia.org/wiki/Aspect-oriented_programming](https://en.m.wikipedia.org/wiki/Aspect-oriented_programming)
-[https://en.m.wikipedia.org/wiki/Dependency_injection](https://en.m.wikipedia.org/wiki/Dependency_injection)
-[https://en.m.wikipedia.org/wiki/SOLID](https://en.m.wikipedia.org/wiki/SOLID)
-[https://en.m.wikipedia.org/wiki/Domain-driven_design](https://en.m.wikipedia.org/wiki/Domain-driven_design)
+- [https://en.m.wikipedia.org/wiki/Aspect-oriented_programming](https://en.m.wikipedia.org/wiki/Aspect-oriented_programming)
+- [https://en.m.wikipedia.org/wiki/Dependency_injection](https://en.m.wikipedia.org/wiki/Dependency_injection)
+- [https://en.m.wikipedia.org/wiki/SOLID](https://en.m.wikipedia.org/wiki/SOLID)
+- [https://en.m.wikipedia.org/wiki/Domain-driven_design](https://en.m.wikipedia.org/wiki/Domain-driven_design)
 
 ## Contribution
 - Feedback is wellcome, don't hesitate to tell me if any improvements seems to be cool
-- Any pull request for patching or corret my bad english are wellcome too
-- You can also donate to help financially maintain the project : 3D8txm4gMJDtti7tpcYnndLDfxpADkLggn
+- Any pull request for patching or correct my bad english are wellcome too
+- You can also donate to help financially maintain the project : **3D8txm4gMJDtti7tpcYnndLDfxpADkLggn**
 
 
 
