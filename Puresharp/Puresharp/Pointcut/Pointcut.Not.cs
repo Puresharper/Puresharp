@@ -6,10 +6,10 @@ namespace Puresharp
 {
     abstract public partial class Pointcut
     {
-        abstract public class Not<T> : Pointcut
+        public class Not<T> : Pointcut
             where T : Pointcut, new()
         {
-            override public bool Match(MethodBase method)
+            sealed override public bool Match(MethodBase method)
             {
                 return !Singleton<T>.Value.Match(method);
             }
