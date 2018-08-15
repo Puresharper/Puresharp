@@ -102,7 +102,7 @@ _Lambda expression offer a way to target constructor to use, specify when to use
 - **How dependency is configured?** 
 _Simply use Metadata&lt;T&gt;.Value into lambda expression when configuring a component._
 
-- **Is constructor injection prevent cyclic reference betwwen component?** 
+- **Is constructor injection prevent cyclic reference between component?** 
 _No, cyclic references are a feature. When an instance is created, it is not really the case, a lazy proxy instance is prepared to minimize unused resources retention and allow cyclic references._
 
 ### Aspect Oriented Programming
