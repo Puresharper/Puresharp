@@ -230,7 +230,7 @@ _There is a **Release** method defined in **Aspect** to get rid of **Aspect** fr
 _No, **Pointcut** can be define by simply implement the abstract method that take a **MethodBase** as single argument and return a boolean to indicate if a method is in **Pointcut** scope._
 
 - **Why I have to use IPuresharp?** 
-_Interception is based on IPuresharp. Indeed IPuresharp add a build action to rewrite CIL to make assembly "Architect Friendly" by injecting transparents and hidden features to to grant full execution control at runtime.
+_Interception is based on IPuresharp. Indeed IPuresharp add a build action to rewrite CIL to make assembly "Architect Friendly" by injecting transparents and hidden features to to grant full execution control at runtime._
 
 - **Can I intercept constructor? If yes, how do I implement it?**
 _Constructor interception is supported and is treated like another method with declaring type as first argument and void for return type._
