@@ -87,10 +87,10 @@ _note : module is IDisposable and crontrol lifecycle for all dependencies._
 _When a module is setup into composition, instantiation mode is required and can be **Singleton** (a single instance with a lifecycle related to container), **Multiton** (a new instance for each module with lifecycle related to module itself) or **Volatile** (always a new instance with lifecycle related to owner module). Container and Module are both IDisposable to release created components._
 
 - **Why using lambda expression to configure components instead of classic generic parameter?** 
-_Lambda expression offer a way to target constructor to use, specify when to use dependencies or not and capture constant._
+_Lambda expression offer a way to target constructor to use, specify when to use dependencies and capture constant._
 
 - **How dependency is configured?** 
-_Simply use Metadata<T>.Value into lambda expression when configuring a component._
+_Simply use Metadata&lt;T&gt;.Value into lambda expression when configuring a component._
 
 - **Is constructor injection prevent cyclic reference betwwen component?** 
 _No, cyclic references are a feature. When an instance is created, it is not really the case, a lazy proxy instance is prepared to minimize unused resources retention and allow cyclic references._
@@ -99,7 +99,6 @@ _No, cyclic references are a feature. When an instance is created, it is not rea
 
 Workflow :
 - Identify group of methods by defining a **Pointcut**
-- Define **Advices**
 - Specify an **Aspect** by defining some **Advices**
 - Instantiate the **Aspect** and **Weave** it into **Pointcut**
 
@@ -141,7 +140,7 @@ Example of implementation
         }
     }
     
-Define a **Pointcut** that represent all method that is readonly operation (where Read attribute and Operation attribute are placed
+Define a **Pointcut** that represent all methods that are readonly operation (where Read attribute and Operation attribute are placed
 
     public class ReadonlyOperation : Pointcut.And<Pointcut<Operation>, Pointcut<Read>>
     {
