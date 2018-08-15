@@ -14,13 +14,17 @@ This framework is divided into 2 parts :
 
 IPuresharp is a nuget package dedicated to rewrite assemblies (using **Mono.Cecil**) to allow them to be highly customizable at runtime. IPuresharp won't add a new library reference to assmblies, but only include a post build process to automatically rewrite assemblies just after success build.
 
-**IPuredharp** can be used manually with command line to manage third party assemblies :
+    Install-Package IPuresharp -Version 3.1.2
+
+It can be used manually with command line to manage third party assemblies :
 
     IPuresharp.exe "FullnameToAssembly.dll"
 
 - **Puresharp** &nbsp;&nbsp;[![NuGet](https://img.shields.io/nuget/v/Puresharp.svg)](https://www.nuget.org/packages/Puresharp)
 
 Puresharp is a nuget package offering various features useful for designing a healthy and productive architecture. This package also includes all the artillery to easily handle the elements that brings the IL writer IPuresharp. The nuget package add a library (Puresharp.dll) without any other depencies.
+
+    Install-Package Puresharp -Version 3.1.2
 
 _note : It is recommanded to install **IPuresharp** nuget package in all projects and install **Puresharp** nuget package only in project where you explicitly need it._
 
@@ -246,3 +250,18 @@ _Generic types and methods ares fully supported by injection._
 
 - **Can I intercept async methods?**
 _Async methods ares fully supported by injection and offer a way to intercept each asynchronous steps._
+
+## More
+[https://en.m.wikipedia.org/wiki/Aspect-oriented_programming](https://en.m.wikipedia.org/wiki/Aspect-oriented_programming)
+[https://en.m.wikipedia.org/wiki/Dependency_injection](https://en.m.wikipedia.org/wiki/Dependency_injection)
+[https://en.m.wikipedia.org/wiki/SOLID](https://en.m.wikipedia.org/wiki/SOLID)
+[https://en.m.wikipedia.org/wiki/Domain-driven_design](https://en.m.wikipedia.org/wiki/Domain-driven_design)
+
+## Contribution
+- Feedback is wellcome, don't hesitate to tell me if any improvements seems to be cool
+- Any pull request for patching or corret my bad english are wellcome too
+- You can also donate to help financially maintain the project : 3D8txm4gMJDtti7tpcYnndLDfxpADkLggn
+
+
+
+
