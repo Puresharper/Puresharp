@@ -96,14 +96,20 @@ _note : module is [IDisposable](https://msdn.microsoft.com/en-us/library/system.
 - **How is managed lifecycle for dependencies?** 
 _When a module is setup into composition, instantiation mode is required and can be **Singleton** (a single instance with a lifecycle related to container), **Multiton** (a new instance for each module with lifecycle related to module itself) or **Volatile** (always a new instance with lifecycle related to owner module). Container and Module are both IDisposable to release created components._
 
+- **Sould my interfaces implement IDisposable to match with lifecycle management?** 
+_On the contrary, the interface of a component should never implement the IDisposable interface which is a purely infrastructure concern. Only implementations could possibly be. The container makes sure to dispose the implementations properly when it implements the IDisposable interface._
+
 - **Why using lambda expression to configure components instead of classic generic parameter?** 
 _Lambda expression offer a way to target constructor to use, specify when to use dependencies and capture constant._
 
 - **How dependency is configured?** 
-_Simply use Metadata&lt;T&gt;.Value into lambda expression when configuring a component._
+_Simply use Metadata&lt;T&gt;.Value in expression when you need to get back dependency from container._
 
 - **Is constructor injection prevent cyclic reference between component?** 
 _No, cyclic references are a feature. When an instance is created, it is not really the case, a lazy proxy instance is prepared to minimize unused resources retention and allow cyclic references._
+
+- **In preview, only constructors are used to setup component, is it limited to constructor injection?** 
+_No, expressions are totally open. You can inject static methods, constructors, members and even mix differents styles._
 
 ### Aspect Oriented Programming
 
@@ -150,13 +156,13 @@ Example of implementation
         }
     }
     
-Define a **Pointcut** that represent all methods that are readonly operation (where Read attribute and Operation attribute are placed
+Supposed we want to log all readonly operations. For that, we have to define a **Pointcut** that represent all methods that are readonly operation (where Read attribute and Operation attribute are placed)
 
     public class ReadonlyOperation : Pointcut.And<Pointcut<Operation>, Pointcut<Read>>
     {
     }
     
-Define an **Advice** to call Trace.WriteLine when calling methods
+Define an **Advice** to log before whith Trace.WriteLine for exemple when calling methods
 
     public class Log : IAdvice
     {
