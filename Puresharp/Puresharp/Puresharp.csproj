@@ -97,12 +97,14 @@
     <Compile Include="Extension.cs" />
     <Compile Include="Instantiation.cs" />
     <Compile Include="Composition\IComposition.cs" />
+    <Compile Include="Validation\IValidator.cs" />
     <Compile Include="Pointcut\Pointcut.And.cs" />
     <Compile Include="Pointcut\Pointcut.Not.cs" />
     <Compile Include="Pointcut\Pointcut.Or.cs" />
+    <Compile Include="Validation\Validation.cs" />
     <Compile Include="Visitation\IVisitable.cs" />
     <Compile Include="Visitation\IVisitor.cs" />
-    <Compile Include="Pointcut\Pointcut.Attribute.cs" />
+    <Compile Include="Attribute\Attribute.cs" />
     <Compile Include="Metadata.cs" />
     <Compile Include="Directory\Directory.cs" />
     <Compile Include="Directory\IDirectory.cs" />
@@ -138,7 +140,7 @@
     <Compile Include="System\Runtime\Closure.cs" />
     <Compile Include="System\Runtime\Closure.Function.cs" />
     <Compile Include="System\Runtime\Closure.Routine.cs" />
-    <Compile Include="System\Singleton.cs" />
+    <Compile Include="Singleton\Singleton.cs" />
     <Compile Include="System\__AppDomain.cs" />
     <Compile Include="Visitation\Visitor.cs" />
     <Compile Include="Visitation\__IVisitable.cs" />

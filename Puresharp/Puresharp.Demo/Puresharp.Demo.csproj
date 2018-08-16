@@ -34,9 +34,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Puresharp, Version=3.1.2.0, Culture=neutral, PublicKeyToken=3463beeb4d884f11, processorArchitecture=MSIL">
-      <HintPath>..\packages\Puresharp.3.1.2\lib\net452\Puresharp.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -53,6 +50,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Puresharp\Puresharp.csproj">
+      <Project>{d58ee5e6-c9e3-4764-aba8-ff9953161d44}</Project>
+      <Name>Puresharp</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\IPuresharp.3.1.2\build\IPuresharp.targets" Condition="Exists('..\packages\IPuresharp.3.1.2\build\IPuresharp.targets')" />

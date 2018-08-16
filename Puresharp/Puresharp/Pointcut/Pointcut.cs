@@ -84,7 +84,7 @@ namespace Puresharp
         /// <returns>True if method is in pointcut scope</returns>
         sealed override public bool Match(MethodBase method)
         {
-            return Pointcut<T>.Attribute.On(method);
+            return Attribute<T>.On(method);
         }
     }
 
@@ -104,7 +104,7 @@ namespace Puresharp
         /// <returns>True if method is in pointcut scope</returns>
         sealed override public bool Match(MethodBase method)
         {
-            return Pointcut<T1>.Attribute.On(method) && Pointcut<T2>.Attribute.On(method);
+            return Attribute<T1>.On(method) && Attribute<T2>.On(method);
         }
     }
 
@@ -126,7 +126,7 @@ namespace Puresharp
         /// <returns>True if method is in pointcut scope</returns>
         sealed override public bool Match(MethodBase method)
         {
-            return Pointcut<T1>.Attribute.On(method) && Pointcut<T2>.Attribute.On(method) && Pointcut<T3>.Attribute.On(method);
+            return Attribute<T1>.On(method) && Attribute<T2>.On(method) && Attribute<T3>.On(method);
         }
     }
 
@@ -150,7 +150,7 @@ namespace Puresharp
         /// <returns>True if method is in pointcut scope</returns>
         sealed override public bool Match(MethodBase method)
         {
-            return Pointcut<T1>.Attribute.On(method) && Pointcut<T2>.Attribute.On(method) && Pointcut<T3>.Attribute.On(method) && Pointcut<T4>.Attribute.On(method);
+            return Attribute<T1>.On(method) && Attribute<T2>.On(method) && Attribute<T3>.On(method) && Attribute<T4>.On(method);
         }
     }
 
@@ -176,7 +176,7 @@ namespace Puresharp
         /// <returns>True if method is in pointcut scope</returns>
         sealed override public bool Match(MethodBase method)
         {
-            return Pointcut<T1>.Attribute.On(method) && Pointcut<T2>.Attribute.On(method) && Pointcut<T3>.Attribute.On(method) && Pointcut<T4>.Attribute.On(method) && Pointcut<T5>.Attribute.On(method);
+            return Attribute<T1>.On(method) && Attribute<T2>.On(method) && Attribute<T3>.On(method) && Attribute<T4>.On(method) && Attribute<T5>.On(method);
         }
     }
 
@@ -204,7 +204,7 @@ namespace Puresharp
         /// <returns>True if method is in pointcut scope</returns>
         sealed override public bool Match(MethodBase method)
         {
-            return Pointcut<T1>.Attribute.On(method) && Pointcut<T2>.Attribute.On(method) && Pointcut<T3>.Attribute.On(method) && Pointcut<T4>.Attribute.On(method) && Pointcut<T5>.Attribute.On(method) && Pointcut<T6>.Attribute.On(method);
+            return Attribute<T1>.On(method) && Attribute<T2>.On(method) && Attribute<T3>.On(method) && Attribute<T4>.On(method) && Attribute<T5>.On(method) && Attribute<T6>.On(method);
         }
     }
 
@@ -234,7 +234,7 @@ namespace Puresharp
         /// <returns>True if method is in pointcut scope</returns>
         sealed override public bool Match(MethodBase method)
         {
-            return Pointcut<T1>.Attribute.On(method) && Pointcut<T2>.Attribute.On(method) && Pointcut<T3>.Attribute.On(method) && Pointcut<T4>.Attribute.On(method) && Pointcut<T5>.Attribute.On(method) && Pointcut<T6>.Attribute.On(method) && Pointcut<T7>.Attribute.On(method);
+            return Attribute<T1>.On(method) && Attribute<T2>.On(method) && Attribute<T3>.On(method) && Attribute<T4>.On(method) && Attribute<T5>.On(method) && Attribute<T6>.On(method) && Attribute<T7>.On(method);
         }
     }
 
@@ -267,7 +267,7 @@ namespace Puresharp
         /// <returns>True if method is in pointcut scope</returns>
         sealed override public bool Match(MethodBase method)
         {
-            return Pointcut<T1>.Attribute.On(method) && Pointcut<T2>.Attribute.On(method) && Pointcut<T3>.Attribute.On(method) && Pointcut<T4>.Attribute.On(method) && Pointcut<T5>.Attribute.On(method) && Pointcut<T6>.Attribute.On(method) && Pointcut<T7>.Attribute.On(method) && Pointcut<T8>.Attribute.On(method);
+            return Attribute<T1>.On(method) && Attribute<T2>.On(method) && Attribute<T3>.On(method) && Attribute<T4>.On(method) && Attribute<T5>.On(method) && Attribute<T6>.On(method) && Attribute<T7>.On(method) && Attribute<T8>.On(method);
         }
     }
 
@@ -301,7 +301,7 @@ namespace Puresharp
         /// <returns>True if method is in pointcut scope</returns>
         sealed override public bool Match(MethodBase method)
         {
-            return Pointcut<T1>.Attribute.On(method) && Pointcut<T2>.Attribute.On(method) && Pointcut<T3>.Attribute.On(method) && Pointcut<T4>.Attribute.On(method) && Pointcut<T5>.Attribute.On(method) && Pointcut<T6>.Attribute.On(method) && Pointcut<T7>.Attribute.On(method) && Pointcut<T8>.Attribute.On(method) && Pointcut<T9>.Attribute.On(method);
+            return Attribute<T1>.On(method) && Attribute<T2>.On(method) && Attribute<T3>.On(method) && Attribute<T4>.On(method) && Attribute<T5>.On(method) && Attribute<T6>.On(method) && Attribute<T7>.On(method) && Attribute<T8>.On(method) && Attribute<T9>.On(method);
         }
     }
 }
