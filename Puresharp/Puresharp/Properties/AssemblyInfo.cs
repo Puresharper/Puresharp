@@ -13,6 +13,6 @@ using Puresharp;
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
 [assembly: Guid("d58ee5e6-c9e3-4764-aba8-ff9953161d44")]
-[assembly: AssemblyVersion("3.1.2")]
-[assembly: AssemblyFileVersion("3.1.2")]
+[assembly: AssemblyVersion("3.2.0")]
+[assembly: AssemblyFileVersion("3.2.0")]
 [assembly: InternalsVisibleTo(Container.Proxy.Assembly)] 
