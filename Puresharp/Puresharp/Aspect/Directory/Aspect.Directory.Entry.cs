@@ -162,7 +162,7 @@ namespace Puresharp
                             _body.Emit(OpCodes.Ldloc_0);
                             _body.Emit(OpCodes.Ldloca_S, 2);
                             _body.Emit(OpCodes.Ldloca_S, 3);
-                            _body.Emit(OpCodes.Callvirt, Metadata<IAdvice>.Method(_IAdvice => _IAdvice.Throw(ref Metadata<Exception>.Value, ref Metadata<object>.Value)).GetGenericMethodDefinition().MakeGenericMethod());
+                            _body.Emit(OpCodes.Callvirt, Metadata<IAdvice>.Method(_IAdvice => _IAdvice.Throw(ref Metadata<Exception>.Value, ref Metadata<object>.Value)).GetGenericMethodDefinition().MakeGenericMethod(_type));
                             _body.Emit(OpCodes.Ldloc_2);
                             _body.Emit(OpCodes.Brfalse, _null);
                             _body.Emit(OpCodes.Ldloc_1);

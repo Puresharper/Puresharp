@@ -30,6 +30,14 @@ namespace Puresharp.Debug.Injected
             double p;
     }
 
+    static public class Demo
+    {
+        static public int Add(int a, int b)
+        {
+            return a + b;
+        }
+    }
+
     public class Demo<T> : IDemo<T>
     {
         public async Task Hello()

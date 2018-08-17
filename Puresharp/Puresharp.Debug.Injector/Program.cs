@@ -69,6 +69,9 @@ namespace Puresharp.Debug.Injector
         {
             var aspect1 = new Aspect1();
             aspect1.Weave<Pointcut<Service>>();
+            aspect1.Weave(Metadata.Method(() => Demo.Add(Metadata<int>.Value, Metadata<int>.Value)));
+
+            var c = Demo.Add(2, 3);
 
             var a = 28;
             var demo = new Demo<Guid>();
