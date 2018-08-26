@@ -5,6 +5,7 @@ using System.Reflection;
 namespace Puresharp
 {
     static internal class Attribute<T>
+        where T : Attribute
     {
         static public bool On(MethodBase method)
         {
@@ -69,7 +70,6 @@ namespace Puresharp
 
         static public bool On(MethodBase method, ParameterInfo parameter)
         {
-            if (parameter.GetCustomAttributes(Metadata<T>.Type, true).Any()) { return true; }
             foreach (var _map in method.DeclaringType.GetInterfaces().Select(_Interface => method.DeclaringType.GetInterfaceMap(_Interface)))
             {
                 for (var _index = 0; _index < _map.TargetMethods.Length; _index++)
@@ -81,7 +81,24 @@ namespace Puresharp
                     }
                 }
             }
-            return false;
+            return parameter.GetCustomAttributes(Metadata<T>.Type, true).Any();
+        }
+
+        static public T From(MethodBase method, ParameterInfo parameter)
+        {
+            foreach (var _map in method.DeclaringType.GetInterfaces().Select(_Interface => method.DeclaringType.GetInterfaceMap(_Interface)))
+            {
+                for (var _index = 0; _index < _map.TargetMethods.Length; _index++)
+                {
+                    if (_map.TargetMethods[_index] == method)
+                    {
+                        var _attributes = _map.InterfaceMethods[_index].GetParameters()[parameter.Position].GetCustomAttributes(Metadata<T>.Type, true);
+                        if (_attributes.Length > 0) { return _attributes.Single() as T; }
+                        return null;
+                    }
+                }
+            }
+            return parameter.GetCustomAttributes(Metadata<T>.Type, true).Single() as T;
         }
 
         static public bool On(Type type)

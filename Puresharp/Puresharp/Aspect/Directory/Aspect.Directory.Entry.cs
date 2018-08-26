@@ -274,19 +274,18 @@ namespace Puresharp
 
                 private void Update()
                 {
-                    //TODO compact Func!
-                    var _aspectization = this.m_Aspectization.SelectMany(_Aspect => _Aspect.Advise(this.Method)).ToArray();
+                    var _aspectization = this.m_Aspectization.SelectMany(_Aspect => _Aspect.Manage(this.Method)).Where(_Advisor => _Advisor != null && _Advisor.Create != null && _Advisor.Create != Advisor.Null).Select(_Advisor => _Advisor.Create).ToArray();
+                    this.m_Sequence.Clear();
                     if (this.m_Factory == null)
                     {
                         var _pointer = this.m_Pointer;
-                        this.m_Sequence.Clear();
-                        this.m_Update(this.Decorate(_pointer, new Advice.Sequence.Factory(_aspectization).Create).GetFunctionPointer());
+                        foreach (var _advisor in _aspectization) { _pointer = this.Decorate(_pointer, _advisor).GetFunctionPointer(); }
+                        this.m_Update(_pointer);
                     }
                     else
                     {
-                        this.m_Sequence.Clear();
-                        if (_aspectization.Length == 0) { this.m_Factory.SetValue(null, Advice.Factory); }
-                        else { this.m_Factory.SetValue(null, new Func<IAdvice>(new Advice.Sequence.Factory(_aspectization).Create)); }
+                        if (_aspectization.Length == 0) { this.m_Factory.SetValue(null, Advisor.Null); }
+                        else { this.m_Factory.SetValue(null, new Func<IAdvice>(new Advisor.Sequence.Factory(_aspectization).Create)); }
                     }
                 }
 

@@ -33,7 +33,7 @@ namespace IPuresharp
             var _advice = _type.Field<IAdvice>("<Advice>", FieldAttributes.Public);
             _type.IsBeforeFieldInit = true;
             var _intializer = _type.Initializer();
-            _intializer.Body.Emit(OpCodes.Call, Metadata.Property(() => Advice.Factory).GetGetMethod(true));
+            _intializer.Body.Emit(OpCodes.Call, Metadata.Property(() => Advisor.Null).GetGetMethod(true));
             _intializer.Body.Emit(OpCodes.Stsfld, _factory.Relative());
             _intializer.Body.Emit(OpCodes.Ret);
             var _constructor = _type.Methods.SingleOrDefault(m => m.IsConstructor && !m.IsStatic);

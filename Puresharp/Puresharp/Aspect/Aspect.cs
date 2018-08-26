@@ -105,9 +105,8 @@ namespace Puresharp
         /// Advise a method.
         /// </summary>
         /// <param name="method">Method to advise</param>
-        /// <param name="signature">Signature of method to advise</param>
-        /// <returns>Enumerable of advice factory</returns>
-        abstract public IEnumerable<Func<IAdvice>> Advise(MethodBase method);
+        /// <returns>Advisors dedicated to method to advise</returns>
+        abstract public IEnumerable<Advisor> Manage(MethodBase method);
 
         /// <summary>
         /// Weave an aspect on a specific method.

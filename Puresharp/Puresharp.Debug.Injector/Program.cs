@@ -57,9 +57,10 @@ namespace Puresharp.Debug.Injector
 
     public class Aspect1 : Aspect
     {
-        public override IEnumerable<Func<IAdvice>> Advise(MethodBase method)
+        public override IEnumerable<Advisor> Manage(MethodBase method)
         {
-            yield return new Func<IAdvice>(() => new Advice1());
+            //yield return Advice.Parameter
+            yield return Advice.For(method).Around(() => new Advice1());
         }
     }
 

@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Puresharp
 {
-    public partial class Advice
+    public partial class Advisor
     {
         internal partial class Sequence : IAdvice
         {
             private IAdvice[] m_Sequence;
 
-            public Sequence(IEnumerable<IAdvice> sequence)
+            public Sequence(IAdvice[] sequence)
             {
-                this.m_Sequence = sequence.ToArray();
+                this.m_Sequence = sequence;
             }
 
             public void Instance<T>(T instance)

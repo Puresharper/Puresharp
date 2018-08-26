@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 
 namespace Puresharp
 {
-    public partial class Advice
+    public partial class Advisor
     {
         internal partial class Sequence
         {
@@ -16,9 +12,7 @@ namespace Puresharp
 
                 public Factory(Func<IAdvice>[] sequence)
                 {
-                    var _list = new List<Func<IAdvice>>();
-                    foreach (var _factory in sequence) { _list.Add(_factory); }
-                    this.Sequence = _list.ToArray();
+                    this.Sequence = sequence;
                 }
 
                 public IAdvice Create()
@@ -26,7 +20,7 @@ namespace Puresharp
                     var _sequence = this.Sequence;
                     var _array = new IAdvice[_sequence.Length];
                     for (var _index = 0; _index < _sequence.Length; _index++) { _array[_index] = _sequence[_index](); }
-                    return new Advice.Sequence(_array);
+                    return new Advisor.Sequence(_array);
                 }
             }
         }

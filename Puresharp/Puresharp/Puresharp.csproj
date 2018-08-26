@@ -59,10 +59,21 @@
   <ItemGroup>
     <Compile Include="Addin.cs" />
     <Compile Include="Addon.cs" />
+    <Compile Include="Advisor\Advisor.After.cs" />
+    <Compile Include="Advisor\Advisor.Execution.Returning.cs" />
+    <Compile Include="Advisor\Advisor.Execution.Throwing.cs" />
+    <Compile Include="Advisor\Advisor.Invocation.cs" />
+    <Compile Include="Advisor\Advisor.IAfter.cs" />
+    <Compile Include="Advisor\Advisor.IParameter.cs" />
+    <Compile Include="Advisor\Advisor.Parameter.cs" />
+    <Compile Include="Advisor\Advisor.cs" />
+    <Compile Include="Advisor\Advisor.IGenerator.cs" />
+    <Compile Include="Advisor\Advisor.Generator.cs" />
     <Compile Include="Advice\Advice.cs" />
-    <Compile Include="Advice\Advice.Sequence.cs" />
-    <Compile Include="Advice\Advice.Sequence.Factory.cs" />
+    <Compile Include="Advisor\Advisor.Sequence.cs" />
+    <Compile Include="Advisor\Advisor.Sequence.Factory.cs" />
     <Compile Include="Advice\IAdvice.cs" />
+    <Compile Include="Advisor\__Advisor.cs" />
     <Compile Include="Aspect\Aspect.Activity.cs" />
     <Compile Include="Aspect\Aspect.cs" />
     <Compile Include="Aspect\Aspect.Listener.cs" />
@@ -101,7 +112,6 @@
     <Compile Include="Pointcut\Pointcut.And.cs" />
     <Compile Include="Pointcut\Pointcut.Not.cs" />
     <Compile Include="Pointcut\Pointcut.Or.cs" />
-    <Compile Include="Validation\Validation.cs" />
     <Compile Include="Visitation\IVisitable.cs" />
     <Compile Include="Visitation\IVisitor.cs" />
     <Compile Include="Attribute\Attribute.cs" />

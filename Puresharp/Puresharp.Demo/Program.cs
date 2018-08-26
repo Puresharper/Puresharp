@@ -70,18 +70,26 @@ namespace Puresharp.Demo
 
     public class EmailValidator : IValidator
     {
-        public void Validate<T>(ParameterInfo parameter, T value)
+        private ParameterInfo m_Parameter;
+
+        public EmailValidator(ParameterInfo parameter)
         {
-            if (value == null) { throw new ArgumentNullException(parameter.Name); }
-            new MailAddress(value.ToString());
+            this.m_Parameter = parameter;
+        }
+
+        public void Validate<T>(T value)
+        {
+            if (value == null || value.ToString() == null) { throw new ArgumentNullException(this.m_Parameter.Name); }
+            try { new MailAddress(value.ToString()); }
+            catch (Exception exception) { throw new ArgumentException(this.m_Parameter.Name, exception); }
         }
     }
 
     public class Validation : Aspect
     {
-        public override IEnumerable<Func<IAdvice>> Advise(MethodBase method)
+        public override IEnumerable<Advisor> Manage(MethodBase method)
         {
-            yield return Validation<EmailAddressAttribute>.With<EmailValidator>(method);
+            yield return Advice.For(method).Parameter<EmailAddressAttribute>().Validate(_Parameter => new EmailValidator(_Parameter));
         }
     }
 

@@ -27,14 +27,9 @@ namespace Puresharp
             return object.ReferenceEquals(left, right);
         }
 
-        static private Func<IAdvice> m_Factory = new Func<IAdvice>(() => new Advice());
-
-        [DebuggerHidden]
-        [Browsable(false)]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        static public Func<IAdvice> Factory
+        static public Advisor.Generator For(MethodBase method)
         {
-            get { return Advice.m_Factory; }
+            return new Advisor.Generator(method);
         }
 
         void IAdvice.Instance<T>(T instance)
