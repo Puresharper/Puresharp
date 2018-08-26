@@ -4,9 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Mail;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Puresharp;
 
 namespace Puresharp.Demo
 {
@@ -23,65 +20,32 @@ namespace Puresharp.Demo
         }
     }
 
-    //public interface IValidator
-    //{
-    //    void Validate<T>(ParameterInfo parameter, T value);
-    //}
-
-    //public sealed class Validator<TAttribute, TValidator> : Advice, IAdvice
-    //    where TAttribute : Attribute
-    //    where TValidator : class, IValidator, new()
-    //{
-    //    private MethodBase m_Method;
-    //    private ParameterInfo[] m_Signature;
-    //    private TValidator m_Validator;
-    //    private int m_Index;
-
-    //    public Validator(MethodBase method)
-    //    {
-    //        this.m_Method = method;
-    //        this.m_Signature = method.GetParameters();
-    //        this.m_Validator = new TValidator();
-    //        this.m_Index = 0;
-    //    }
-
-    //    void IAdvice.Argument<T>(ref T value)
-    //    {
-    //        var _parameter = this.m_Signature[this.m_Index++];
-    //        if (this.Match(_parameter)) { this.m_Validator.Validate(_parameter, value); }
-    //    }
-
-    //    private bool Match(ParameterInfo parameter)
-    //    {
-    //        if (parameter.GetCustomAttributes(typeof(TAttribute), true).Any()) { return true; }
-    //        foreach (var _map in this.m_Method.DeclaringType.GetInterfaces().Select(_Interface => this.m_Method.DeclaringType.GetInterfaceMap(_Interface)))
-    //        {
-    //            for (var _index = 0; _index < _map.TargetMethods.Length; _index++)
-    //            {
-    //                if (_map.TargetMethods[_index] == this.m_Method)
-    //                {
-    //                    if (_map.InterfaceMethods[_index].GetParameters().ElementAt(parameter.Position).GetCustomAttributes(typeof(TAttribute), true).Any()) { return true; }
-    //                }
-    //            }
-    //        }
-    //        return false;
-    //    }
-    //}
-
-    public class EmailValidator : IValidator
+    static public class ValidationExtension
+    {
+        static public Advisor Validate<TAttribute>(this Advisor.Parameter<TAttribute> @this, Action<ParameterInfo, TAttribute, string> validate)
+            where TAttribute : Attribute
+        {
+            return @this.Supervise().With(_Supervision => new Validator<TAttribute>(_Supervision.Parameter, _Supervision.Attribute, validate));
+        }
+    }
+    
+    public class Validator<TAttribute> : ISupervisor
+        where TAttribute : Attribute
     {
         private ParameterInfo m_Parameter;
+        private TAttribute m_Attribute;
+        private Action<ParameterInfo, TAttribute, string> m_Validate;
 
-        public EmailValidator(ParameterInfo parameter)
+        public Validator(ParameterInfo parameter, TAttribute attribute, Action<ParameterInfo, TAttribute, string> validate)
         {
             this.m_Parameter = parameter;
+            this.m_Attribute = attribute;
+            this.m_Validate = validate;
         }
 
-        public void Validate<T>(T value)
+        void ISupervisor.Supervise<T>(T value)
         {
-            if (value == null || value.ToString() == null) { throw new ArgumentNullException(this.m_Parameter.Name); }
-            try { new MailAddress(value.ToString()); }
-            catch (Exception exception) { throw new ArgumentException(this.m_Parameter.Name, exception); }
+            this.m_Validate(this.m_Parameter, this.m_Attribute, value == null ? null : value.ToString());
         }
     }
 
@@ -89,7 +53,15 @@ namespace Puresharp.Demo
     {
         public override IEnumerable<Advisor> Manage(MethodBase method)
         {
-            yield return Advice.For(method).Parameter<EmailAddressAttribute>().Validate(_Parameter => new EmailValidator(_Parameter));
+            yield return Advice
+                .For(method)
+                .Parameter<EmailAddressAttribute>()
+                .Validate((_Parameter, _Attribute, _Value) =>
+                {
+                    if (_Value == null) { throw new ArgumentNullException(_Parameter.Name); }
+                    try { new MailAddress(_Value.ToString()); }
+                    catch (Exception exception) { throw new ArgumentException(_Parameter.Name, exception); }
+                });
         }
     }
 

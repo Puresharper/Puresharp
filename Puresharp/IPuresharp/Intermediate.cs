@@ -35,7 +35,7 @@ namespace IPuresharp
         public Intermediate(TypeDefinition type, Authentic authentic)
         {
             this.m_Type = type.Type("<Intermediate>", TypeAttributes.NestedPublic | TypeAttributes.Class | TypeAttributes.Sealed | TypeAttributes.Abstract);
-            foreach (var _parameter in type.GenericParameters) { this.m_Type.GenericParameters.Add(new GenericParameter(_parameter.Name, this.m_Type)); }
+            foreach (var _parameter in type.GenericParameters) { this.m_Type.GenericParameters.Add(_parameter.Copy(this.m_Type)); }
             this.m_Authentic = authentic;
             this.m_Dictionary = new Dictionary<MethodDefinition, FieldDefinition>();
             foreach (var _method in type.DeclaringType.Methods.ToArray())
@@ -48,8 +48,8 @@ namespace IPuresharp
         private FieldDefinition Manage(MethodDefinition method)
         {
             var _type = this.m_Type.Type(method.IsConstructor ? "<<Constructor>>" : $"<{ method.Name }>", TypeAttributes.NestedPublic | TypeAttributes.Abstract | TypeAttributes.Sealed);
-            foreach (var _parameter in this.m_Type.GenericParameters) { _type.GenericParameters.Add(new GenericParameter(_parameter.Name, _type)); }
-            foreach (var _parameter in method.GenericParameters) { _type.GenericParameters.Add(new GenericParameter(_parameter.Name, _type)); }
+            foreach (var _parameter in this.m_Type.GenericParameters) { _type.GenericParameters.Add(_parameter.Copy(_type)); }
+            foreach (var _parameter in method.GenericParameters) { _type.GenericParameters.Add(_parameter.Copy(_type)); }
             var _handle = _type.Field<object>("<Handle>", FieldAttributes.Static | FieldAttributes.Public).Relative();
             var _authentic = _type.Field<IntPtr>("<Authentic>", FieldAttributes.Static | FieldAttributes.Public).Relative();
             var _auxiliary = _type.Field<IntPtr>("<Auxiliary>", FieldAttributes.Static | FieldAttributes.Public).Relative();

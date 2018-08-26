@@ -4,7 +4,7 @@ namespace Puresharp
 {
     public partial class Advisor
     {
-        public class Parameter : Advisor.IParameter
+        public partial class Parameter : Advisor.IParameter
         {
             private Advisor.IGenerator m_Generator;
 
@@ -19,7 +19,7 @@ namespace Puresharp
             }
         }
 
-        public class Parameter<T> : Advisor.IParameter<T>
+        public partial class Parameter<T> : Advisor.IParameter<T>
             where T : Attribute
         {
             private Advisor.IGenerator m_Generator;

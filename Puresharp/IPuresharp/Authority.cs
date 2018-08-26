@@ -114,7 +114,7 @@ namespace IPuresharp
         public Authority(TypeDefinition type)
         {
             this.m_Type = type.Type("<Puresharp>", TypeAttributes.Class | TypeAttributes.NestedPrivate | TypeAttributes.Sealed | TypeAttributes.Abstract);
-            foreach (var _parameter in type.GenericParameters) { this.m_Type.GenericParameters.Add(new GenericParameter(_parameter.Name, this.m_Type)); }
+            foreach (var _parameter in type.GenericParameters) { this.m_Type.GenericParameters.Add(_parameter.Copy(this.m_Type)); }
             foreach (var _method in type.Methods.ToArray())
             {
                 if (Bypass.Match(_method)) { continue; }

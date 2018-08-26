@@ -65,6 +65,9 @@
     <Compile Include="Advisor\Advisor.Invocation.cs" />
     <Compile Include="Advisor\Advisor.IAfter.cs" />
     <Compile Include="Advisor\Advisor.IParameter.cs" />
+    <Compile Include="Advisor\Advisor.Parameter.ISupervise.cs" />
+    <Compile Include="Advisor\Advisor.Parameter.Supervise.cs" />
+    <Compile Include="Advisor\Advisor.Parameter.Supervision.cs" />
     <Compile Include="Advisor\Advisor.Parameter.cs" />
     <Compile Include="Advisor\Advisor.cs" />
     <Compile Include="Advisor\Advisor.IGenerator.cs" />
@@ -108,7 +111,7 @@
     <Compile Include="Extension.cs" />
     <Compile Include="Instantiation.cs" />
     <Compile Include="Composition\IComposition.cs" />
-    <Compile Include="Validation\IValidator.cs" />
+    <Compile Include="Supervision\ISupervisor.cs" />
     <Compile Include="Pointcut\Pointcut.And.cs" />
     <Compile Include="Pointcut\Pointcut.Not.cs" />
     <Compile Include="Pointcut\Pointcut.Or.cs" />

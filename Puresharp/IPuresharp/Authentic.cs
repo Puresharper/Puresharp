@@ -31,7 +31,7 @@ namespace IPuresharp
         public Authentic(TypeDefinition type)
         {
             this.m_Type = type.Type("<Authentic>", TypeAttributes.NestedPublic | TypeAttributes.Class | TypeAttributes.Sealed | TypeAttributes.Abstract);
-            foreach (var _parameter in type.GenericParameters) { this.m_Type.GenericParameters.Add(new GenericParameter(_parameter.Name, this.m_Type)); }
+            foreach (var _parameter in type.GenericParameters) { this.m_Type.GenericParameters.Add(_parameter.Copy(this.m_Type)); }
             this.m_Dictionary = new Dictionary<MethodDefinition, MethodDefinition>();
             foreach (var _method in type.DeclaringType.Methods.ToArray())
             {
@@ -44,7 +44,7 @@ namespace IPuresharp
         {
             var _type = this.m_Type.Type(method.IsConstructor ? "<<Constructor>>" : $"<{ method.Name }>", TypeAttributes.NestedPublic | TypeAttributes.Class | TypeAttributes.Sealed | TypeAttributes.Abstract);
             //var _genericity = new Dictionary<TypeReference, TypeReference>();
-            foreach (var _generic in method.DeclaringType.GenericParameters.Concat(method.GenericParameters)) { _type.GenericParameters.Add(new GenericParameter(_generic.Name, _type)); }
+            foreach (var _generic in method.DeclaringType.GenericParameters.Concat(method.GenericParameters)) { _type.GenericParameters.Add(_generic.Copy(_type)); }
             var _importation = new Importation(method, _type);
             var _method = _type.Method(method.IsConstructor ? "<Constructor>" : method.Name, MethodAttributes.Static | MethodAttributes.Private);
             if (!method.IsStatic) { _method.Parameter("this", ParameterAttributes.None, _method.Resolve(method.DeclaringType)); }
