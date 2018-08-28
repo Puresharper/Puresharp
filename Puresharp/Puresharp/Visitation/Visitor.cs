@@ -12,9 +12,9 @@ namespace Puresharp
             this.m_Action = action;
         }
 
-        public void Visit(T item)
+        public void Visit(Func<T> value)
         {
-            this.m_Action(item);
+            this.m_Action(value());
         }
     }
 }

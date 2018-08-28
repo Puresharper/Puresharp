@@ -4,7 +4,6 @@ using System.Linq.Expressions;
 namespace Puresharp
 {
     internal class Setup<T> : ISetup<T>
-            where T : class
     {
         private Expression<Func<T>> m_Activation;
         private Instantiation m_Instantiation;
@@ -34,7 +33,7 @@ namespace Puresharp
 
         void IVisitable.Accept(IVisitor visitor)
         {
-            visitor.Visit<T>();
+            visitor.Visit<T>(null);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Puresharp
         {
             lock (this.m_Handle)
             {
-                foreach (var _item in this.m_Archive) { visitor.Visit(_item); }
+                foreach (var _item in this.m_Archive) { visitor.Visit(() => _item); }
             }
         }
 

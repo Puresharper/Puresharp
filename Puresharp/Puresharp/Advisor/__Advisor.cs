@@ -8,8 +8,6 @@ namespace Puresharp
 {
     static public class __Advisor
     {
-        static public readonly ModuleBuilder Module = AppDomain.CurrentDomain.DefineDynamicModule();
-
         static public Advisor Around(this Advisor.IGenerator @this, Func<IAdvice> advise)
         {
             return new Advisor(advise);
@@ -72,17 +70,6 @@ namespace Puresharp
             where T : Attribute
         {
             return new Advisor.Parameter<T>(@this);
-        }
-
-        static public Advisor.Parameter.Supervise Supervise(this Advisor.IParameter @this)
-        {
-            return new Advisor.Parameter.Supervise(@this.Generator);
-        }
-        
-        static public Advisor.Parameter<T>.Supervise Supervise<T>(this Advisor.IParameter<T> @this)
-            where T : Attribute
-        {
-            return new Advisor.Parameter<T>.Supervise(@this.Generator);
         }
     }
 }

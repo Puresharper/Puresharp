@@ -8,25 +8,13 @@ namespace Puresharp
 {
     public partial class Container
     {
-        static internal class Proxy
-        {
-            internal const string Assembly = "Puresharp.Composition.Proxy.Assembly, PublicKey=002400000480000094000000060200000024000052534131000400000100010051A76D0BF5695EB709657A23340D31BF2831DBAEF43A4929F442F960875159CCAD93FBC5994577761C35CFFBA0AEF27255D462A61E1D23D45CF06D9C23FABB59CAB1C6FE510C653CD5843CBC911DBABB0E29201DE8C6035CDEDD3ABEEDBC081C5F85E51D84D6CB068DCF8E9682B2AC3FEE59179221C3E1618A8C3275A8EEDECA";
-            static private ModuleBuilder m_Module = AppDomain.CurrentDomain.DefineDynamicModule(Container.Proxy.Assembly.Substring(0, Container.Proxy.Assembly.IndexOf(',')), Container.Proxy.Assembly.Substring(Container.Proxy.Assembly.IndexOf('=') + 1));
-
-            static public ModuleBuilder Module
-            {
-                get { return Container.Proxy.m_Module; }
-            }
-        }
-
         static internal class Proxy<T>
-            where T : class
         {
             static internal Func<Func<Resolver, Reservation, object>, Func<Resolver, Reservation, object>> Create = Proxy<T>.Compile();
 
             static private Func<Func<Resolver, Reservation, object>, Func<Resolver, Reservation, object>> Compile()
             {
-                var _type = Proxy.Module.DefineType(Declaration<T>.Value, TypeAttributes.Public | TypeAttributes.Class, Metadata<object>.Type, new Type[] { Metadata<T>.Type });
+                var _type = Composition.Module.DefineType(Declaration<T>.Value, TypeAttributes.Public | TypeAttributes.Class, Metadata<object>.Type, new Type[] { Metadata<T>.Type });
                 var _value = _type.DefineField("m_Value", Metadata<T>.Type, FieldAttributes.Private);
                 var _activate = _type.DefineField("m_Activate", Metadata<Func<object>>.Type, FieldAttributes.Private);
                 var _constructor = _type.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, new Type[] { Metadata<Func<object>>.Type });

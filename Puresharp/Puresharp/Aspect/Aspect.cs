@@ -5,7 +5,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace Puresharp
 {
@@ -14,6 +15,10 @@ namespace Puresharp
     /// </summary>
     abstract public partial class Aspect : IDisposable
     {
+        internal const string Assembly = "Puresharp.Composition.Proxy.Assembly, PublicKey=002400000480000094000000060200000024000052534131000400000100010051A76D0BF5695EB709657A23340D31BF2831DBAEF43A4929F442F960875159CCAD93FBC5994577761C35CFFBA0AEF27255D462A61E1D23D45CF06D9C23FABB59CAB1C6FE510C653CD5843CBC911DBABB0E29201DE8C6035CDEDD3ABEEDBC081C5F85E51D84D6CB068DCF8E9682B2AC3FEE59179221C3E1618A8C3275A8EEDECB";
+        static private ModuleBuilder m_Module = AppDomain.CurrentDomain.DefineDynamicModule(Aspect.Assembly.Substring(0, Aspect.Assembly.IndexOf(',')), Aspect.Assembly.Substring(Aspect.Assembly.IndexOf('=') + 1));
+        static internal ModuleBuilder Module { get { return Aspect.m_Module; } }
+
         static private readonly Resource m_Resource = new Resource();
         static private List<Aspect> m_Aspectization = new List<Aspect>();
         

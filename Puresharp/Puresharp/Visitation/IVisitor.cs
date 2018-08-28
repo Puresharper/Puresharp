@@ -4,13 +4,11 @@ namespace Puresharp
 {
     public interface IVisitor
     {
-        void Visit<T>()
-            where T : class;
+        void Visit<T>(Func<T> value);
     }
 
     public interface IVisitor<in T>
-        where T : class
     {
-        void Visit(T item);
+        void Visit(Func<T> value);
     }
 }

@@ -18,7 +18,7 @@ namespace Puresharp
                 this.m_Setting.Accept(this);
             }
 
-            void IVisitor.Visit<T>()
+            void IVisitor.Visit<T>(Func<T> value)
             {
                 var _setup = this.m_Setting.Setup<T>();
                 var _body = Expression.Convert(new Converter(Parameter<Resolver>.Expression).Visit(_setup.Activation.Body), Metadata<object>.Type);

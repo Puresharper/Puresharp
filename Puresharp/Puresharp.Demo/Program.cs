@@ -4,6 +4,40 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Mail;
 using System.Reflection;
+using Puresharp.Legacy;
+
+namespace Puresharp.Legacy
+{
+    static public class Validation
+    {
+        static public Advisor Validate<T>(this Advisor.Parameter<T> @this, Action<ParameterInfo, T, string> validate)
+            where T : Attribute
+        {
+            return @this.Visit((_Parameter, _Attribute) => new Validator<T>(_Parameter, _Attribute, validate));
+        }
+    }
+
+    public class Validator<T> : IVisitor
+        where T : Attribute
+    {
+        private ParameterInfo m_Parameter;
+        private T m_Attribute;
+        private Action<ParameterInfo, T, string> m_Validate;
+
+        public Validator(ParameterInfo parameter, T attribute, Action<ParameterInfo, T, string> validate)
+        {
+            this.m_Parameter = parameter;
+            this.m_Attribute = attribute;
+            this.m_Validate = validate;
+        }
+
+        void IVisitor.Visit<T>(Func<T> value)
+        {
+            var _value = value();
+            this.m_Validate(this.m_Parameter, this.m_Attribute, _value == null ? null : _value.ToString());
+        }
+    }
+}
 
 namespace Puresharp.Demo
 {
@@ -19,36 +53,7 @@ namespace Puresharp.Demo
             return $"Hello {account}";
         }
     }
-
-    static public class ValidationExtension
-    {
-        static public Advisor Validate<TAttribute>(this Advisor.Parameter<TAttribute> @this, Action<ParameterInfo, TAttribute, string> validate)
-            where TAttribute : Attribute
-        {
-            return @this.Supervise().With(_Supervision => new Validator<TAttribute>(_Supervision.Parameter, _Supervision.Attribute, validate));
-        }
-    }
     
-    public class Validator<TAttribute> : ISupervisor
-        where TAttribute : Attribute
-    {
-        private ParameterInfo m_Parameter;
-        private TAttribute m_Attribute;
-        private Action<ParameterInfo, TAttribute, string> m_Validate;
-
-        public Validator(ParameterInfo parameter, TAttribute attribute, Action<ParameterInfo, TAttribute, string> validate)
-        {
-            this.m_Parameter = parameter;
-            this.m_Attribute = attribute;
-            this.m_Validate = validate;
-        }
-
-        void ISupervisor.Supervise<T>(T value)
-        {
-            this.m_Validate(this.m_Parameter, this.m_Attribute, value == null ? null : value.ToString());
-        }
-    }
-
     public class Validation : Aspect
     {
         public override IEnumerable<Advisor> Manage(MethodBase method)

@@ -15,4 +15,5 @@ using Puresharp;
 [assembly: Guid("d58ee5e6-c9e3-4764-aba8-ff9953161d44")]
 [assembly: AssemblyVersion("4.0.0")]
 [assembly: AssemblyFileVersion("4.0.0")]
-[assembly: InternalsVisibleTo(Container.Proxy.Assembly)] 
+[assembly: InternalsVisibleTo(Composition.Assembly)]
+[assembly: InternalsVisibleTo(Aspect.Assembly)]

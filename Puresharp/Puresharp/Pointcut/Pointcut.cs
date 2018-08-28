@@ -30,7 +30,7 @@ namespace Puresharp
                 {
                     if (this.Match(_Method))
                     {
-                        visitor.Visit(_Method);
+                        visitor.Visit(() => _Method);
                     }
                 })
             );
