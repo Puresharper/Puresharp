@@ -1,10 +1,17 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
 using System.Net.Mail;
 using System.Reflection;
+using System.Reflection.Emit;
+using System.Threading;
+using System.Threading.Tasks;
+using Puresharp;
 using Puresharp.Legacy;
 
 namespace Puresharp.Legacy
@@ -71,10 +78,67 @@ namespace Puresharp.Demo
         }
     }
 
+    public class Interceptor : IAdvice
+    {
+        public Interceptor()
+        {
+        }
+
+        public void Instance<T>(T instance)
+        {
+        }
+
+        public void Argument<T>(ref T value)
+        {
+        }
+
+        public void Begin()
+        {
+        }
+
+        public void Await(MethodInfo method, Task task)
+        {
+        }
+
+        public void Await<T>(MethodInfo method, Task<T> task)
+        {
+        }
+
+        public void Continue()
+        {
+        }
+
+        public void Throw(ref Exception exception)
+        {
+        }
+
+        public void Throw<T>(ref Exception exception, ref T value)
+        {
+        }
+
+        public void Return()
+        {
+        }
+
+        public void Return<T>(ref T value)
+        {
+        }
+
+        public void Dispose()
+        {
+        }
+    }
+
     public class Demonstration : Aspect
     {
         public override IEnumerable<Advisor> Manage(MethodBase method)
         {
+            //Use classic interceptor to create an 'Around' advisor (place break points in interceptor methods to test interception).
+            yield return Advice
+                .For(method)
+                .Around(() => new Interceptor());
+
+            //Use linq expression to generate a 'Before' advisor.
             yield return Advice
                 .For(method)
                 .Before(invocation =>
@@ -82,9 +146,20 @@ namespace Puresharp.Demo
                     return Expression.Call
                     (
                         Metadata.Method(() => Console.WriteLine(Metadata<string>.Value)), 
-                        Expression.Constant("Hello World")
+                        Expression.Constant($"Expression : { method.Name }")
                     );
                 });
+
+            //Use ILGeneration from reflection emit API to generate a 'Before' advisor.
+            yield return Advice
+                .For(method)
+                .Before(advice =>
+                {
+                    advice.Emit(OpCodes.Ldstr, $"ILGenerator : { method.Name }");
+                    advice.Emit(OpCodes.Call, Metadata.Method(() => Console.WriteLine(Metadata<string>.Value)));
+                });
+
+            //Coming soon : 'After', 'After Returning', 'After Throwing'
         }
     }
 
