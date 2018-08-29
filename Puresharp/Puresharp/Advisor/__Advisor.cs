@@ -138,15 +138,120 @@ namespace Puresharp
             return new Advisor.After(@this);
         }
 
-        //static public Advisor After(this Advisor.IGenerator @this, Action<ILGenerator> advise)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        static private Advisor After(this Advisor.IGenerator @this, Action<MethodBuilder> advise)
+        {
+            var _signature = @this.Method.GetParameters().Select(_Parameter => _Parameter.ParameterType).ToArray();
+            if (@this.Method.ReturnType() == Metadata.Void)
+            {
+                return @this.Create((_Type, _Instance, _Arguments) =>
+                {
+                    var _advice = _Type.DefineMethod("<Advice>", MethodAttributes.Static | MethodAttributes.Private, CallingConventions.Standard, Metadata.Void, @this.Method.IsStatic ? _signature : new Type[] { @this.Method.DeclaringType }.Concat(_signature).ToArray());
+                    advise(_advice);
+                    var _method = _Type.DefineMethod("IAdvice.Return", MethodAttributes.Private | MethodAttributes.Virtual, CallingConventions.HasThis, Metadata.Void, Type.EmptyTypes);
+                    var _body = _method.GetILGenerator();
+                    if (_Instance != null)
+                    {
+                        _body.Emit(OpCodes.Ldarg_0);
+                        _body.Emit(OpCodes.Ldfld, _Instance);
+                    }
+                    foreach (var _argument in _Arguments)
+                    {
+                        _body.Emit(OpCodes.Ldarg_0);
+                        _body.Emit(OpCodes.Ldfld, _argument);
+                    }
+                    _body.Emit(OpCodes.Call, _advice);
+                    _body.Emit(OpCodes.Ret);
+                    _Type.DefineMethodOverride(_method, Metadata<IAdvice>.Method(_IAdvice => _IAdvice.Return()));
+                    _method = _Type.DefineMethod("IAdvice.Throw", MethodAttributes.Private | MethodAttributes.Virtual, CallingConventions.HasThis, Metadata.Void, new Type[] { Metadata<Exception>.Type.MakeByRefType() });
+                    _body = _method.GetILGenerator();
+                    if (_Instance != null)
+                    {
+                        _body.Emit(OpCodes.Ldarg_0);
+                        _body.Emit(OpCodes.Ldfld, _Instance);
+                    }
+                    foreach (var _argument in _Arguments)
+                    {
+                        _body.Emit(OpCodes.Ldarg_0);
+                        _body.Emit(OpCodes.Ldfld, _argument);
+                    }
+                    _body.Emit(OpCodes.Call, _advice);
+                    _body.Emit(OpCodes.Ret);
+                    _Type.DefineMethodOverride(_method, Metadata<IAdvice>.Method(_IAdvice => _IAdvice.Throw(ref Metadata<Exception>.Value)));
+                });
+            }
+            else
+            {
+                return @this.Create((_Type, _Instance, _Arguments) =>
+                {
+                    var _advice = _Type.DefineMethod("<Advice>", MethodAttributes.Static | MethodAttributes.Private, CallingConventions.Standard, Metadata.Void, @this.Method.IsStatic ? _signature : new Type[] { @this.Method.DeclaringType }.Concat(_signature).ToArray());
+                    advise(_advice);
+                    var _method = _Type.DefineMethod("IAdvice.Return", MethodAttributes.Private | MethodAttributes.Virtual, CallingConventions.HasThis, Metadata.Void, new Type[] { @this.Method.ReturnType().MakeByRefType() });
+                    var _body = _method.GetILGenerator();
+                    if (_Instance != null)
+                    {
+                        _body.Emit(OpCodes.Ldarg_0);
+                        _body.Emit(OpCodes.Ldfld, _Instance);
+                    }
+                    foreach (var _argument in _Arguments)
+                    {
+                        _body.Emit(OpCodes.Ldarg_0);
+                        _body.Emit(OpCodes.Ldfld, _argument);
+                    }
+                    _body.Emit(OpCodes.Call, _advice);
+                    _body.Emit(OpCodes.Ret);
+                    _Type.DefineMethodOverride(_method, Metadata<IAdvice>.Method(_IAdvice => _IAdvice.Return(ref Metadata<object>.Value)).GetGenericMethodDefinition());
+                    _method = _Type.DefineMethod("IAdvice.Throw", MethodAttributes.Private | MethodAttributes.Virtual, CallingConventions.HasThis, Metadata.Void, new Type[] { Metadata<Exception>.Type.MakeByRefType(), @this.Method.ReturnType().MakeByRefType() });
+                    _body = _method.GetILGenerator();
+                    if (_Instance != null)
+                    {
+                        _body.Emit(OpCodes.Ldarg_0);
+                        _body.Emit(OpCodes.Ldfld, _Instance);
+                    }
+                    foreach (var _argument in _Arguments)
+                    {
+                        _body.Emit(OpCodes.Ldarg_0);
+                        _body.Emit(OpCodes.Ldfld, _argument);
+                    }
+                    _body.Emit(OpCodes.Call, _advice);
+                    _body.Emit(OpCodes.Ret);
+                    _Type.DefineMethodOverride(_method, Metadata<IAdvice>.Method(_IAdvice => _IAdvice.Throw(ref Metadata<Exception>.Value, ref Metadata<object>.Value)).GetGenericMethodDefinition());
+                });
+            }
+        }
 
-        //static public Advisor After(this Advisor.IGenerator @this, Func<Advisor.Invocation, Expression> advise)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        static public Advisor After(this Advisor.IGenerator @this, Action<ILGenerator> advise)
+        {
+            return @this.After(new Action<MethodBuilder>(_Method =>
+            {
+                var _body = _Method.GetILGenerator();
+                advise(_body);
+                _body.Emit(OpCodes.Ret);
+            }));
+        }
+
+        static public Advisor After(this Advisor.IGenerator @this, Func<Advisor.Invocation, Expression> advise)
+        {
+            var _signature = @this.Method.GetParameters().Select(_Parameter => Expression.Parameter(_Parameter.ParameterType));
+            return @this.After(new Action<MethodBuilder>(_Method =>
+            {
+                if (@this.Method.IsStatic) { Expression.Lambda(advise(new Advisor.Invocation(@this.Method, null, new Collection<Expression>(_signature))), _signature).CompileToMethod(_Method); }
+                else
+                {
+                    var _instance = Expression.Parameter(@this.Method.DeclaringType);
+                    Expression.Lambda(advise(new Advisor.Invocation(@this.Method, _instance, new Collection<Expression>(_signature))), new ParameterExpression[] { _instance }.Concat(_signature)).CompileToMethod(_Method);
+                }
+            }));
+        }
+
+        static public Advisor After(this Advisor.IGenerator @this, Expression advice)
+        {
+            return @this.After(_Invication => advice);
+        }
+
+        static public Advisor After(this Advisor.IGenerator @this, Action advice)
+        {
+            return @this.After(Expression.Call(Expression.Field(null, Aspect.Module.DefineField(advice)), Metadata<Action>.Method(_Action => _Action.Invoke())));
+        }
 
         //static public Advisor Throwing(this Advisor.IAfter @this, Action<ILGenerator> advise)
         //{
