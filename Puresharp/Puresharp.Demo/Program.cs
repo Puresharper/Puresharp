@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net.Mail;
 using System.Reflection;
 using Puresharp.Legacy;
@@ -70,13 +71,33 @@ namespace Puresharp.Demo
         }
     }
 
+    public class Demonstration : Aspect
+    {
+        public override IEnumerable<Advisor> Manage(MethodBase method)
+        {
+            yield return Advice
+                .For(method)
+                .Before(invocation =>
+                {
+                    return Expression.Call
+                    (
+                        Metadata.Method(() => Console.WriteLine(Metadata<string>.Value)), 
+                        Expression.Constant("Hello World")
+                    );
+                });
+        }
+    }
+
     static public class Test
     {
         [Startup]
         static public void Hello()
         {
-            var validation = new Validation();
-            validation.Weave<Pointcut<EmailAddressAttribute>>();
+            var _demonstration = new Demonstration();
+            _demonstration.Weave<Pointcut<EmailAddressAttribute>>();
+
+            var _validation = new Validation();
+            _validation.Weave<Pointcut<EmailAddressAttribute>>();
         }
     }
 
