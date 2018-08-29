@@ -123,6 +123,16 @@ namespace Puresharp
             }));
         }
 
+        static public Advisor Before(this Advisor.IGenerator @this, Expression advice)
+        {
+            return @this.Before(_Invication => advice);
+        }
+
+        static public Advisor Before(this Advisor.IGenerator @this, Action advice)
+        {
+            return @this.Before(Expression.Call(Expression.Field(null, Aspect.Module.DefineField(advice)), Metadata<Action>.Method(_Action => _Action.Invoke())));
+        }
+
         static public Advisor.After After(this Advisor.IGenerator @this)
         {
             return new Advisor.After(@this);

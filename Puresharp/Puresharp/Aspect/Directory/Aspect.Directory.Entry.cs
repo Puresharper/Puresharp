@@ -274,7 +274,7 @@ namespace Puresharp
 
                 private void Update()
                 {
-                    var _aspectization = this.m_Aspectization.SelectMany(_Aspect => _Aspect.Manage(this.Method)).Where(_Advisor => _Advisor != null && _Advisor.Create != null && _Advisor.Create != Advisor.Null).Select(_Advisor => _Advisor.Create).ToArray();
+                    var _aspectization = this.m_Aspectization.SelectMany(_Aspect => _Aspect.Manage(this.Method).Reverse()).Where(_Advisor => _Advisor != null && _Advisor.Create != null && _Advisor.Create != Advisor.Null).Select(_Advisor => _Advisor.Create).ToArray();
                     this.m_Sequence.Clear();
                     if (this.m_Factory == null)
                     {

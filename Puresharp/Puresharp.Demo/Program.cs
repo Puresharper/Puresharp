@@ -150,6 +150,18 @@ namespace Puresharp.Demo
                     );
                 });
 
+            //Use linq expression to generate a 'Before' advisor.
+            yield return Advice
+                .For(method)
+                .Before
+                (
+                    Expression.Call
+                    (
+                        Metadata.Method(() => Console.WriteLine(Metadata<string>.Value)),
+                        Expression.Constant($"Expression2 : { method.Name }")
+                    )
+                );
+
             //Use ILGeneration from reflection emit API to generate a 'Before' advisor.
             yield return Advice
                 .For(method)
@@ -158,6 +170,11 @@ namespace Puresharp.Demo
                     advice.Emit(OpCodes.Ldstr, $"ILGenerator : { method.Name }");
                     advice.Emit(OpCodes.Call, Metadata.Method(() => Console.WriteLine(Metadata<string>.Value)));
                 });
+
+            //Use simple Action to generate a 'Before' advisor.
+            yield return Advice
+                .For(method)
+                .Before(() => Console.WriteLine($"Action : { method.Name }"));
 
             //Coming soon : 'After', 'After Returning', 'After Throwing'
         }
