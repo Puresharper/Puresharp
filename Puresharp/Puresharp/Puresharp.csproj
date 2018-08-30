@@ -60,9 +60,13 @@
     <Compile Include="Activation\Activator.cs" />
     <Compile Include="Addin.cs" />
     <Compile Include="Addon.cs" />
+    <Compile Include="Advisor\Advisor.After.Returning.cs" />
+    <Compile Include="Advisor\Advisor.After.IReturning.cs" />
     <Compile Include="Advisor\Advisor.After.cs" />
+    <Compile Include="Advisor\Advisor.Execution.Returning.Value.cs" />
     <Compile Include="Advisor\Advisor.Execution.Returning.cs" />
     <Compile Include="Advisor\Advisor.Execution.Throwing.cs" />
+    <Compile Include="Advisor\Advisor.Execution.cs" />
     <Compile Include="Advisor\Advisor.Invocation.cs" />
     <Compile Include="Advisor\Advisor.IAfter.cs" />
     <Compile Include="Advisor\Advisor.IParameter.cs" />

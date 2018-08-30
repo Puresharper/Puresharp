@@ -177,6 +177,22 @@ namespace Puresharp.Demo
                 .Before(() => Console.WriteLine($"Action : { method.Name }"));
 
             //Coming soon : 'After', 'After Returning', 'After Throwing'
+            yield return Advice
+                .For(method)
+                .After().Returning()
+                .Value(_Execution =>
+                {
+                    return Expression.Call
+                    (
+                        Metadata.Method(() => Console.WriteLine(Metadata<string>.Value)),
+                        Expression.Call
+                        (
+                            Metadata.Method(() => string.Concat(Metadata<string>.Value, Metadata<string>.Value)),
+                            Expression.Constant("Returned Value : "),
+                            Expression.Call(_Execution.Return, Metadata<object>.Method(_Object => _Object.ToString()))
+                        )
+                    );
+                });
         }
     }
 

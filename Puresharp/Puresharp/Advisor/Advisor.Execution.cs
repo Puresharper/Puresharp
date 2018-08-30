@@ -6,13 +6,13 @@ namespace Puresharp
 {
     public partial class Advisor
     {
-        public class Invocation
+        public partial class Execution
         {
             private MethodBase m_Method;
             private Expression m_Instance;
             private Collection<Expression> m_Arguments;
 
-            internal Invocation(MethodBase method, Expression instance, Collection<Expression> arguments)
+            internal Execution(MethodBase method, Expression instance, Collection<Expression> arguments)
             {
                 this.m_Method = method;
                 this.m_Instance = instance;

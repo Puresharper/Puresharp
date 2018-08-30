@@ -7,7 +7,7 @@ namespace Puresharp
     {
         public partial class Execution
         {
-            public class Throwing
+            public partial class Throwing
             {
                 private Advisor.Invocation m_Invocation;
                 private Expression m_Exception;

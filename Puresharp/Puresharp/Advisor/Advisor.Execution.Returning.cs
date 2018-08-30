@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Puresharp
 {
@@ -7,25 +8,32 @@ namespace Puresharp
     {
         public partial class Execution
         {
-            public class Returning
+            public partial class Returning
             {
-                private Advisor.Invocation m_Invocation;
-                private Expression m_Return;
+                private MethodBase m_Method;
+                private Expression m_Instance;
+                private Collection<Expression> m_Arguments;
 
-                public Returning(Advisor.Invocation invocation, Expression @return)
+                internal Returning(MethodBase method, Expression instance, Collection<Expression> arguments)
                 {
-                    this.m_Invocation = invocation;
-                    this.m_Return = @return;
+                    this.m_Method = method;
+                    this.m_Instance = instance;
+                    this.m_Arguments = arguments;
                 }
 
-                public Advisor.Invocation Invocation
+                public MethodBase Method
                 {
-                    get { return this.m_Invocation; }
+                    get { return this.m_Method; }
                 }
 
-                public Expression Return
+                public Expression Instance
                 {
-                    get { return this.m_Return; }
+                    get { return this.m_Instance; }
+                }
+
+                public Collection<Expression> Arguments
+                {
+                    get { return this.m_Arguments; }
                 }
             }
         }
