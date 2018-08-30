@@ -234,6 +234,7 @@ Instantiate **Aspect** and weave it to our ReadonlyOperation **Pointcut**
     var _logging = new Logging();
     _logging.Weave<ReadonlyOperation>();
 
+Congratulation, the logging Aspect in now injected to all readonly operation contract.
 
 #### Sample
     
