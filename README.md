@@ -233,8 +233,11 @@ Instantiate **Aspect** and weave it to our ReadonlyOperation **Pointcut**
 
     var _logging = new Logging();
     _logging.Weave<ReadonlyOperation>();
-    
+
+
 #### Sample
+    
+Here a set of sample to let see differents way to create and advisor.
     
     public class Logging : Aspect
     {
