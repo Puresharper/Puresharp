@@ -82,6 +82,7 @@
     <Compile Include="Aspect\Aspect.Activity.cs" />
     <Compile Include="Aspect\Aspect.cs" />
     <Compile Include="Aspect\Aspect.Listener.cs" />
+    <Compile Include="Aspect\Aspect.Monitor.cs" />
     <Compile Include="Aspect\Directory\Aspect.Directory.cs" />
     <Compile Include="Aspect\Directory\Aspect.Directory.Entry.cs" />
     <Compile Include="Audience\IAudition.cs" />
@@ -159,7 +160,9 @@
     <Compile Include="Visitation\Visitor.cs" />
     <Compile Include="Visitation\__IVisitable.cs" />
     <Compile Include="Weave\IWeave.cs" />
+    <Compile Include="Weave\Weave.Connection.cs" />
     <Compile Include="Weave\Weave.cs" />
+    <Compile Include="Weave\Weave.IConnection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Puresharp.snk" />

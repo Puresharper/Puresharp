@@ -1,17 +1,20 @@
 ﻿using System;
-using System.Reflection;
+using System.Diagnostics;
 
 namespace Puresharp
 {
-    internal class Weave : IWeave
+    public partial class Weave : IWeave
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Aspect m_Aspect;
-        private MethodBase m_Method;
 
-        public Weave(Aspect aspect, MethodBase method)
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Pointcut m_Pointcut;
+
+        internal Weave(Aspect aspect, Pointcut pointcut)
         {
             this.m_Aspect = aspect;
-            this.m_Method = method;
+            this.m_Pointcut = pointcut;
         }
 
         public Aspect Aspect
@@ -19,9 +22,9 @@ namespace Puresharp
             get { return this.m_Aspect; }
         }
 
-        public MethodBase Method
+        public Pointcut Pointcut
         {
-            get { return this.m_Method; }
+            get { return this.m_Pointcut; }
         }
     }
 }

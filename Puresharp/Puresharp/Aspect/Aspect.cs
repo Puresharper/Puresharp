@@ -19,24 +19,9 @@ namespace Puresharp
         static private ModuleBuilder m_Module = AppDomain.CurrentDomain.DefineDynamicModule(Aspect.Assembly.Substring(0, Aspect.Assembly.IndexOf(',')), Aspect.Assembly.Substring(Aspect.Assembly.IndexOf('=') + 1));
         static internal ModuleBuilder Module { get { return Aspect.m_Module; } }
 
-        static private readonly Resource m_Resource = new Resource();
+        static private Resource m_Resource = new Resource();
         static private List<Aspect> m_Aspectization = new List<Aspect>();
         
-        /// <summary>
-        /// Administration.
-        /// </summary>
-        /// <returns>Administration</returns>
-        static public IEnumerable<IWeave> Administration
-        {
-            get
-            {
-                lock (Aspect.m_Resource)
-                {
-                    return Aspect.m_Aspectization.SelectMany(_Aspect => _Aspect.m_Directory).ToArray();
-                }
-            }
-        }
-
         /// <summary>
         /// Enumerate all aspects woven on a method.
         /// </summary>
@@ -50,18 +35,18 @@ namespace Puresharp
             }
         }
 
-        /// <summary>
-        /// Enumerate all aspects woven on a pointcut.
-        /// </summary>
-        /// <param name="pointcut">Pointcut</param>
-        /// <returns>Enumerable of aspects woven on pointcut</returns>
-        static public IEnumerable<Aspect> From(Pointcut pointcut)
-        {
-            lock (Aspect.m_Resource)
-            {
-                return Aspect.Administration.Where(_Weave => pointcut.Match(_Weave.Method)).Select(_Weave => _Weave.Aspect).ToArray();
-            }
-        }
+        ///// <summary>
+        ///// Enumerate all aspects woven on a pointcut.
+        ///// </summary>
+        ///// <param name="pointcut">Pointcut</param>
+        ///// <returns>Enumerable of aspects woven on pointcut</returns>
+        //static public IEnumerable<Aspect> From(Pointcut pointcut)
+        //{
+        //    lock (Aspect.m_Resource)
+        //    {
+        //        return Aspect.Administration.Where(_Weave => pointcut.Match(_Weave.Method)).Select(_Weave => _Weave.Aspect).ToArray();
+        //    }
+        //}
 
         /// <summary>
         /// Equals.
@@ -92,17 +77,41 @@ namespace Puresharp
         }
 
         private Dictionary<Pointcut, Aspect.Listener> m_Dictionary = new Dictionary<Pointcut, Listener>();
-        private Directory<IWeave> m_Directory;
+        private Directory<IWeave> m_Weaving;
+        private Directory<Weave.IConnection> m_Network;
 
         /// <summary>
         /// Create an aspect.
         /// </summary>
         protected Aspect()
         {
-            this.m_Directory = new Directory<IWeave>();
+            this.m_Weaving = new Directory<IWeave>();
+            this.m_Network = new Directory<Weave.IConnection>();
             lock (Aspect.m_Resource)
             {
                 Aspect.m_Aspectization.Add(this);
+            }
+        }
+
+        public Collection<IWeave> Weaving
+        {
+            get
+            {
+                lock (Aspect.m_Resource)
+                {
+                    return new Collection<IWeave>(this.m_Weaving);
+                }
+            }
+        }
+
+        public Collection<Weave.IConnection> Network
+        {
+            get
+            {
+                lock (Aspect.m_Resource)
+                {
+                    return new Collection<Weave.IConnection>(this.m_Network);
+                }
             }
         }
 
@@ -113,31 +122,27 @@ namespace Puresharp
         /// <returns>Advisors dedicated to method to advise</returns>
         abstract public IEnumerable<Advisor> Manage(MethodBase method);
 
-        /// <summary>
-        /// Weave an aspect on a specific method.
-        /// </summary>
-        /// <param name="method">Method</param>
-        public void Weave(MethodBase method)
+        private void Weave(MethodBase method)
         {
             if (method.IsAbstract) { throw new InvalidOperationException("Aspect cannot be woven to an abstract method."); }
             lock (Aspect.m_Resource)
             {
                 Aspect.Directory.Add(method, this);
-                this.m_Directory.Add(new Weave(this, method));
+                this.m_Network.Add(new Weave.Connection(this, method));
             }
         }
 
         private void Weave(Pointcut pointcut)
         {
             if (this.m_Dictionary.ContainsKey(pointcut)) { return; }
-            this.m_Dictionary.Add(pointcut, new Aspect.Listener(this, pointcut));
+            lock (Aspect.m_Resource)
+            {
+                this.m_Weaving.Add(new Weave(this, pointcut));
+                this.m_Dictionary.Add(pointcut, new Aspect.Listener(this, pointcut));
+            }
         }
         
-        /// <summary>
-        /// Remove aspect from method.
-        /// </summary>
-        /// <param name="method">Method</param>
-        public void Release(MethodBase method)
+        private void Release(MethodBase method)
         {
             lock (Aspect.m_Resource)
             {
@@ -150,17 +155,21 @@ namespace Puresharp
             if (this.m_Dictionary.TryGetValue(pointcut, out var _listener))
             {
                 _listener.Dispose();
-                this.m_Dictionary.Remove(pointcut);
-                this.m_Directory.Accept
-                (
-                    new Visitor<IWeave>(_Weave =>
-                    {
-                        if (pointcut.Match(_Weave.Method) && !this.m_Dictionary.Keys.Any(_Pointcut => _Pointcut.Match(_Weave.Method)))
+                lock (Aspect.m_Resource)
+                {
+                    this.m_Weaving.Add(new Weave(this, pointcut));
+                    this.m_Dictionary.Remove(pointcut);
+                    this.m_Network.Accept
+                    (
+                        new Visitor<Weave.IConnection>(_Connection =>
                         {
-                            this.Release(_Weave.Method);
-                        }
-                    })
-                );
+                            if (pointcut.Match(_Connection.Method) && !this.m_Dictionary.Keys.Any(_Pointcut => _Pointcut.Match(_Connection.Method)))
+                            {
+                                this.Release(_Connection.Method);
+                            }
+                        })
+                    );
+                }
             }
         }
 
@@ -198,7 +207,7 @@ namespace Puresharp
         {
             lock (Aspect.m_Resource)
             {
-                this.m_Directory.Accept(new Visitor<IWeave>(_Weave => this.Release(_Weave.Method)));
+                this.m_Network.Accept(new Visitor<Weave.IConnection>(_Connection => this.Release(_Connection.Method)));
             }
         }
 

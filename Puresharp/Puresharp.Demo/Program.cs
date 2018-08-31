@@ -213,9 +213,11 @@ namespace Puresharp.Demo
     {
         static void Main(string[] args)
         {
-            var helloWorldService = new HelloWorldService();
-            var response1 = helloWorldService.SayHello("tony.thong@outlook.com");
-            var response2 = helloWorldService.SayHello("tony");
+            var _aspectization = Aspect.Monitor.Aspectization;
+
+            var _service = new HelloWorldService();
+            var _return1 = _service.SayHello("tony.thong@outlook.com");
+            var _return2 = _service.SayHello("tony");
         }
     }
 }
