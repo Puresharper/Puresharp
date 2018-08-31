@@ -225,7 +225,9 @@ Define an **Aspect** that use log **Advice**
     {
         override public IEnumerable<Advisor> Manage(MethodBase method)
         {
-            yield return Advice.From(method).Around(() => new Log(method));
+            yield return Advice
+                .For(method)
+                .Around(() => new Log(method));
         }
     }
     
