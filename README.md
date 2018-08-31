@@ -292,7 +292,8 @@ Here a set of sample to let see differents way to create and advisor.
             //Use an expression to generate an 'After-Returning-Value' Advisor
             yield return Advice
                 .For(method)
-                .After().Returning()
+                .After()
+                .Returning()
                 .Value(_Execution =>
                 {
                     return Expression.Call
