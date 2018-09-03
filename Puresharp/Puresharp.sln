@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puresharp.Debug.ILSpy", "Pu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puresharp.Demo", "Puresharp.Demo\Puresharp.Demo.csproj", "{32DF9A7F-4B3B-4AD5-A272-B6A79ECAB064}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puresharp.Underground", "Puresharp.Underground\Puresharp.Underground.csproj", "{ACC18564-2203-4799-BA6D-2EF110BDC5EA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,10 @@ Global
 		{32DF9A7F-4B3B-4AD5-A272-B6A79ECAB064}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32DF9A7F-4B3B-4AD5-A272-B6A79ECAB064}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32DF9A7F-4B3B-4AD5-A272-B6A79ECAB064}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACC18564-2203-4799-BA6D-2EF110BDC5EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACC18564-2203-4799-BA6D-2EF110BDC5EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACC18564-2203-4799-BA6D-2EF110BDC5EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACC18564-2203-4799-BA6D-2EF110BDC5EA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
