@@ -9,18 +9,18 @@ namespace Puresharp
     {
         private class Mapping : IVisitor, IEnumerable<Map>, IDisposable
         {
-            private IComposition m_Setting;
+            private IComposition m_Composition;
             private LinkedList<Map> m_Value = new LinkedList<Map>();
 
-            public Mapping(IComposition setting)
+            public Mapping(IComposition composition)
             {
-                this.m_Setting = setting;
-                this.m_Setting.Accept(this);
+                this.m_Composition = composition;
+                this.m_Composition.Accept(this);
             }
 
             void IVisitor.Visit<T>(Func<T> value)
             {
-                var _setup = this.m_Setting.Setup<T>();
+                var _setup = this.m_Composition.Setup<T>();
                 var _body = Expression.Convert(new Converter(Parameter<Resolver>.Expression).Visit(_setup.Activation.Body), Metadata<object>.Type);
                 var _activate = Expression.Lambda<Func<Resolver, Reservation, object>>(_body, Parameter<Resolver>.Expression, Parameter<Reservation>.Expression).Compile();
                 this.m_Value.AddLast(new Map(Metadata<T>.Type, Proxy<T>.Create(_activate), _setup.Instantiation));
@@ -29,7 +29,7 @@ namespace Puresharp
             public void Dispose()
             {
                 this.m_Value = null;
-                this.m_Setting = null;
+                this.m_Composition = null;
             }
 
             IEnumerator<Map> IEnumerable<Map>.GetEnumerator()

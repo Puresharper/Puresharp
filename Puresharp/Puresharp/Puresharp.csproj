@@ -104,6 +104,7 @@
     <Compile Include="Composition\ISetup.cs" />
     <Compile Include="Composition\Composition.cs" />
     <Compile Include="Composition\Setup.cs" />
+    <Compile Include="Composition\__Composition.cs" />
     <Compile Include="Concurrency.cs" />
     <Compile Include="Data\Data.Collection.cs" />
     <Compile Include="Data\Data.cs" />

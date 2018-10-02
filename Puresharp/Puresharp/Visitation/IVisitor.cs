@@ -7,7 +7,8 @@ namespace Puresharp
         void Visit<T>(Func<T> value);
     }
 
-    public interface IVisitor<in T>
+    public interface IVisitor<T>
+        where T : class
     {
         void Visit(Func<T> value);
     }
