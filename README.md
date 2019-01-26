@@ -1,7 +1,7 @@
 
 
-# Puresharp API .NET 4.5.2+
-Puresharp is a set of features for .NET 4.5.2+ to improve productivity by producing flexible and efficient applications.
+# Puresharp API .NET
+Puresharp is a set of features for .NET 4.5.2+ / .NET Core 2.1 to improve productivity by producing flexible and efficient applications.
 
 ## Overview
 Puresharp mainly provides architectural tools to build the basics of professional applications :
@@ -14,7 +14,7 @@ This framework is divided into 2 parts :
 
 IPuresharp is a nuget package dedicated to rewrite assemblies (using **[Mono.Cecil](https://github.com/jbevain/cecil)**) to allow them to be highly customizable at runtime. IPuresharp won't add a new library reference to assmblies, but only include a post build process to automatically rewrite assemblies just after success build.
 
-    Install-Package IPuresharp -Version 3.1.2
+    Install-Package IPuresharp -Version 5.0.5
 
 It can be used manually with command line to manage third party assemblies
 
@@ -24,7 +24,7 @@ It can be used manually with command line to manage third party assemblies
 
 Puresharp is a nuget package offering various features useful for designing a healthy and productive architecture. This package also includes all the artillery to easily handle the elements that brings the IL writer IPuresharp. The nuget package add a library (Puresharp.dll) without any other depencies.
 
-    Install-Package Puresharp -Version 3.1.2
+    Install-Package Puresharp -Version 5.0.5
 
 _note : It is recommanded to install **IPuresharp** nuget package in all projects and install **Puresharp** nuget package only in project where you explicitly need it._
 
