@@ -15,10 +15,10 @@ namespace Puresharp
                 this.m_Sequence = sequence;
             }
 
-            public void Instance<T>(T instance)
+            public void Instance<T>(T value)
             {
                 var _sequence = this.m_Sequence;
-                for (var _index = 0; _index < _sequence.Length; _index++) { _sequence[_index].Instance(instance); }
+                for (var _index = 0; _index < _sequence.Length; _index++) { _sequence[_index].Instance(value); }
             }
 
             public void Argument<T>(ref T value)

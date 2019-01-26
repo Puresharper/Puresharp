@@ -89,7 +89,7 @@ namespace IPuresharp
                     if (_type.Name.StartsWith("<")) { continue; }
                     foreach (var _method in _type.Methods)
                     {
-                        if (_method.IsStatic && _method.Parameters.Count == 0 && _method.HasCustomAttribute<Startup>() && _method.ReturnType.Resolve() == _method.Module.Import(typeof(void)).Resolve())
+                        if (_method.IsStatic && _method.Parameters.Count == 0 && _method.CustomAttributes.Any(_Attribute => _Attribute.AttributeType.Name == "Startup") && _method.ReturnType.Resolve() == _method.Module.Import(typeof(void)).Resolve())
                         {
                             _initializer.Body.Emit(Metadata<Action<MethodInfo>>.Type);
                             _initializer.Body.Emit(Metadata<Startup>.Type);

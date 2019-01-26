@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Puresharp
 {
-    public class Resolver : IResolver
+    internal class Resolver
     {
         private Dictionary<Type, Func<Resolver, Reservation, object>> m_Dictionary;
         private Reservation m_Reservation;
@@ -14,7 +14,8 @@ namespace Puresharp
             this.m_Reservation = new Reservation();
         }
 
-        T IResolver.Resolve<T>()
+        public T Resolve<T>()
+            where T : class
         {
             return this.m_Dictionary[Metadata<T>.Type](this, this.m_Reservation) as T;
         }

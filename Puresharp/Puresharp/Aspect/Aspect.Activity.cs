@@ -8,7 +8,7 @@ namespace Puresharp
     {
         internal class Activity
         {
-            internal readonly Activity Authority;
+            internal readonly Aspect.Activity Authority;
             public readonly Type Type;
             public readonly MethodBase Method;
             public readonly Signature Signature;

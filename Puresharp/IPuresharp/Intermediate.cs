@@ -75,7 +75,7 @@ namespace IPuresharp
             _primary.ReturnType = _primary.Resolve(method.ReturnType);
             if (!method.IsStatic) { _primary.Parameter("this", ParameterAttributes.None, _primary.Resolve(method.DeclaringType)); }
             foreach (var _parameter in method.Parameters) { _primary.Parameter(_parameter.Name, _parameter.Attributes, _primary.Resolve(_parameter.ParameterType)); }
-            _primary.Body.Variable<IntPtr>("<Pointer>");
+            _primary.Body.Variable<IntPtr>();
             _primary.Body.Emit(OpCodes.Ldsfld, _handle);
             _primary.Body.Emit(OpCodes.Call, Metadata.Method(() => Monitor.Enter(Metadata<object>.Value)));
 

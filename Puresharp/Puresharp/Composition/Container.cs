@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace Puresharp
 {
     /// <summary>
     /// Container.
     /// </summary>
-    public partial class Container : IContainer
+    internal partial class Container : IContainer
     {
+        private Dictionary<Type, Map> m_Mapping = new Dictionary<Type, Map>();
         private Dictionary<Type, Func<Func<Resolver, Reservation, object>>> m_Dictionary = new Dictionary<Type, Func<Func<Resolver, Reservation, object>>>();
         private Reservation m_Reservation;
 
@@ -16,7 +19,7 @@ namespace Puresharp
         /// Create a container based on composition.
         /// </summary>
         /// <param name="composition">Composition</param>
-        public Container(IComposition composition)
+        public Container(Composition composition)
         {
             using (var _mapping = new Mapping(composition))
             {
@@ -31,6 +34,7 @@ namespace Puresharp
                     {
                         case Instantiation.Volatile:
                         {
+                            this.m_Mapping.Add(_type, _map);
                             _dictionary.Add(_type, new Func<Func<Resolver, Reservation, object>>(() => new Func<Resolver, Reservation, object>((_Resolver, _Reservation) =>
                             {
                                 var _value = _activate(_Resolver, _Reservation);
@@ -41,6 +45,7 @@ namespace Puresharp
                         }
                         case Instantiation.Multiton:
                         {
+                            this.m_Mapping.Add(_type, _map);
                             _dictionary.Add(_type, new Func<Func<Resolver, Reservation, object>>(() =>
                             {
                                 var _lazy = new Lazy((_Resolver, _Reservation) =>
@@ -55,6 +60,7 @@ namespace Puresharp
                         }
                         case Instantiation.Singleton:
                         {
+                            this.m_Mapping.Add(_type, _map);
                             var _lazy = new Lazy((_Resolver, _Reservation) =>
                             {
                                 var _value = _activate(_Resolver, _Reservation);
@@ -79,9 +85,10 @@ namespace Puresharp
         public IModule<T> Module<T>()
             where T : class
         {
+            var _map = this.m_Mapping[Metadata<T>.Type];
             var _dictionary = new Dictionary<Type, Func<Resolver, Reservation, object>>();
             foreach (var _item in this.m_Dictionary) { _dictionary.Add(_item.Key, _item.Value()); }
-            return new Module<T>(new Resolver(_dictionary));
+            return new Module<T>(_map.Activation as Expression<Func<T>>, _map.Instantiation, new Resolver(_dictionary));
         }
 
         /// <summary>

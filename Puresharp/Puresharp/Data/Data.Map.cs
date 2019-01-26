@@ -4,9 +4,9 @@ using System.Threading;
 
 namespace Puresharp
 {
-    static internal partial class Data
+    static public partial class Data
     {
-        public partial class Map<TKey, TValue>
+        internal partial class Map<TKey, TValue>
         {
             private IDictionary<TKey, TValue> m_Dictionary;
             private Func<TKey, TValue> m_Lookup;
@@ -22,8 +22,7 @@ namespace Puresharp
                 this.m_Dictionary = dictionary;
                 this.m_Lookup = new Func<TKey, TValue>(_Key =>
                 {
-                    TValue _value;
-                    if (this.m_Dictionary.TryGetValue(_Key, out _value)) { return _value; }
+                    if (this.m_Dictionary.TryGetValue(_Key, out var _value)) { return _value; }
                     _value = lookup(_Key);
                     this.m_Dictionary.Add(_Key, _value);
                     return _value;

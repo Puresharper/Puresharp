@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Puresharp
 {
-    public class Reservation : IDisposable
+    internal class Reservation : IDisposable
     {
         private LinkedList<IDisposable> m_Reserve = new LinkedList<IDisposable>();
 

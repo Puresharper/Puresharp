@@ -2,7 +2,7 @@
 
 namespace Puresharp
 {
-    public partial class Container
+    internal partial class Container
     {
         private class Lazy
         {

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime;
@@ -61,21 +60,21 @@ namespace Puresharp
 
                 public readonly Type Type;
                 public readonly MethodBase Method;
-                public readonly Activity Activity;
+                public readonly Aspect.Activity Activity;
                 private readonly LinkedList<Aspect> m_Aspectization;
                 private readonly LinkedList<MethodInfo> m_Sequence;
-                private readonly Dictionary<Aspect, Activity> m_Dictionary;
+                private readonly Dictionary<Aspect, Aspect.Activity> m_Dictionary;
                 private readonly IntPtr m_Pointer;
                 private readonly Action<IntPtr> m_Update;
                 private readonly FieldInfo m_Factory;
 
-                internal Entry(Type type, MethodBase method, Activity activity)
+                internal Entry(Type type, MethodBase method, Aspect.Activity activity)
                 {
                     this.Type = type;
                     this.Method = method;
                     this.Activity = activity;
                     this.m_Aspectization = new LinkedList<Aspect>();
-                    this.m_Dictionary = new Dictionary<Aspect, Activity>();
+                    this.m_Dictionary = new Dictionary<Aspect, Aspect.Activity>();
                     var _update = Aspect.Directory.Entry.Update(method);
                     if (_update == null) { throw new NotSupportedException(string.Format($"Method '{ method.Name }' declared in type '{ method.DeclaringType.AssemblyQualifiedName }' is not managed by Puresharp and cannot be supervised. Please install Puresharp nuget package on '{ method.DeclaringType.Assembly.FullName }' to make it supervisable.")); }
                     this.m_Update = Delegate.CreateDelegate(Metadata<Action<IntPtr>>.Type, _update) as Action<IntPtr>;
@@ -115,7 +114,7 @@ namespace Puresharp
                         if (_type == Runtime.Void)
                         {
                             var _return = _body.DefineLabel();
-                            var _null = _body.DefineLabel();
+                            var _leave = _body.DefineLabel();
                             var _rethrow = _body.DefineLabel();
                             _body.Emit(OpCodes.Ldloc_0);
                             _body.Emit(OpCodes.Callvirt, Metadata<IAdvice>.Method(_IAdvice => _IAdvice.Return()));
@@ -128,26 +127,28 @@ namespace Puresharp
                             _body.Emit(OpCodes.Ldloca_S, 2);
                             _body.Emit(OpCodes.Callvirt, Metadata<IAdvice>.Method(_IAdvice => _IAdvice.Throw(ref Metadata<Exception>.Value)));
                             _body.Emit(OpCodes.Ldloc_2);
-                            _body.Emit(OpCodes.Brfalse, _null);
+                            _body.Emit(OpCodes.Brfalse, _leave);
                             _body.Emit(OpCodes.Ldloc_1);
                             _body.Emit(OpCodes.Ldloc_2);
                             _body.Emit(OpCodes.Beq, _rethrow);
                             _body.Emit(OpCodes.Ldloc_2);
                             _body.Emit(OpCodes.Throw);
+                            _body.Emit(OpCodes.Br, _leave);
                             _body.MarkLabel(_rethrow);
                             _body.Emit(OpCodes.Rethrow);
-                            _body.MarkLabel(_null);
+                            _body.MarkLabel(_leave);
                             _body.Emit(OpCodes.Leave, _return);
-                            _body.EndExceptionBlock();
-                            _body.MarkLabel(_return);
+                            _body.BeginFinallyBlock();
                             _body.Emit(OpCodes.Ldloc_0);
                             _body.Emit(OpCodes.Callvirt, Metadata<IAdvice>.Method(_IAdvice => _IAdvice.Dispose()));
+                            _body.EndExceptionBlock();
+                            _body.MarkLabel(_return);
                             _body.Emit(OpCodes.Ret);
                         }
                         else
                         {
                             var _return = _body.DefineLabel();
-                            var _null = _body.DefineLabel();
+                            var _leave = _body.DefineLabel();
                             var _rethrow = _body.DefineLabel();
                             _body.DeclareLocal(_type);
                             _body.Emit(OpCodes.Stloc_3);
@@ -164,20 +165,22 @@ namespace Puresharp
                             _body.Emit(OpCodes.Ldloca_S, 3);
                             _body.Emit(OpCodes.Callvirt, Metadata<IAdvice>.Method(_IAdvice => _IAdvice.Throw(ref Metadata<Exception>.Value, ref Metadata<object>.Value)).GetGenericMethodDefinition().MakeGenericMethod(_type));
                             _body.Emit(OpCodes.Ldloc_2);
-                            _body.Emit(OpCodes.Brfalse, _null);
+                            _body.Emit(OpCodes.Brfalse, _leave);
                             _body.Emit(OpCodes.Ldloc_1);
                             _body.Emit(OpCodes.Ldloc_2);
                             _body.Emit(OpCodes.Beq, _rethrow);
                             _body.Emit(OpCodes.Ldloc_2);
                             _body.Emit(OpCodes.Throw);
+                            _body.Emit(OpCodes.Br, _leave);
                             _body.MarkLabel(_rethrow);
                             _body.Emit(OpCodes.Rethrow);
-                            _body.MarkLabel(_null);
+                            _body.MarkLabel(_leave);
                             _body.Emit(OpCodes.Leave, _return);
-                            _body.EndExceptionBlock();
-                            _body.MarkLabel(_return);
+                            _body.BeginFinallyBlock();
                             _body.Emit(OpCodes.Ldloc_0);
                             _body.Emit(OpCodes.Callvirt, Metadata<IAdvice>.Method(_IAdvice => _IAdvice.Dispose()));
+                            _body.EndExceptionBlock();
+                            _body.MarkLabel(_return);
                             _body.Emit(OpCodes.Ldloc_3);
                             _body.Emit(OpCodes.Ret);
                         }
@@ -201,7 +204,7 @@ namespace Puresharp
                         if (_type == Runtime.Void)
                         {
                             var _return = _body.DefineLabel();
-                            var _null = _body.DefineLabel();
+                            var _leave = _body.DefineLabel();
                             var _rethrow = _body.DefineLabel();
                             _body.Emit(OpCodes.Ldloc_0);
                             _body.Emit(OpCodes.Callvirt, Metadata<IAdvice>.Method(_IAdvice => _IAdvice.Return()));
@@ -214,26 +217,28 @@ namespace Puresharp
                             _body.Emit(OpCodes.Ldloca_S, 2);
                             _body.Emit(OpCodes.Callvirt, Metadata<IAdvice>.Method(_IAdvice => _IAdvice.Throw(ref Metadata<Exception>.Value)));
                             _body.Emit(OpCodes.Ldloc_2);
-                            _body.Emit(OpCodes.Brfalse, _null);
+                            _body.Emit(OpCodes.Brfalse, _leave);
                             _body.Emit(OpCodes.Ldloc_1);
                             _body.Emit(OpCodes.Ldloc_2);
                             _body.Emit(OpCodes.Beq, _rethrow);
                             _body.Emit(OpCodes.Ldloc_2);
                             _body.Emit(OpCodes.Throw);
+                            _body.Emit(OpCodes.Br, _leave);
                             _body.MarkLabel(_rethrow);
                             _body.Emit(OpCodes.Rethrow);
-                            _body.MarkLabel(_null);
+                            _body.MarkLabel(_leave);
                             _body.Emit(OpCodes.Leave, _return);
-                            _body.EndExceptionBlock();
-                            _body.MarkLabel(_return);
+                            _body.BeginFinallyBlock();
                             _body.Emit(OpCodes.Ldloc_0);
                             _body.Emit(OpCodes.Callvirt, Metadata<IAdvice>.Method(_IAdvice => _IAdvice.Dispose()));
+                            _body.EndExceptionBlock();
+                            _body.MarkLabel(_return);
                             _body.Emit(OpCodes.Ret);
                         }
                         else
                         {
                             var _return = _body.DefineLabel();
-                            var _null = _body.DefineLabel();
+                            var _leave = _body.DefineLabel();
                             var _rethrow = _body.DefineLabel();
                             _body.DeclareLocal(_type);
                             _body.Emit(OpCodes.Stloc_3);
@@ -250,20 +255,22 @@ namespace Puresharp
                             _body.Emit(OpCodes.Ldloca_S, 3);
                             _body.Emit(OpCodes.Callvirt, Metadata<IAdvice>.Method(_IAdvice => _IAdvice.Throw(ref Metadata<Exception>.Value, ref Metadata<object>.Value)).GetGenericMethodDefinition().MakeGenericMethod(_type));
                             _body.Emit(OpCodes.Ldloc_2);
-                            _body.Emit(OpCodes.Brfalse, _null);
+                            _body.Emit(OpCodes.Brfalse, _leave);
                             _body.Emit(OpCodes.Ldloc_1);
                             _body.Emit(OpCodes.Ldloc_2);
                             _body.Emit(OpCodes.Beq, _rethrow);
                             _body.Emit(OpCodes.Ldloc_2);
                             _body.Emit(OpCodes.Throw);
+                            _body.Emit(OpCodes.Br, _leave);
                             _body.MarkLabel(_rethrow);
                             _body.Emit(OpCodes.Rethrow);
-                            _body.MarkLabel(_null);
+                            _body.MarkLabel(_leave);
                             _body.Emit(OpCodes.Leave, _return);
-                            _body.EndExceptionBlock();
-                            _body.MarkLabel(_return);
+                            _body.BeginFinallyBlock();
                             _body.Emit(OpCodes.Ldloc_0);
                             _body.Emit(OpCodes.Callvirt, Metadata<IAdvice>.Method(_IAdvice => _IAdvice.Dispose()));
+                            _body.EndExceptionBlock();
+                            _body.MarkLabel(_return);
                             _body.Emit(OpCodes.Ldloc_3);
                             _body.Emit(OpCodes.Ret);
                         }
@@ -274,18 +281,27 @@ namespace Puresharp
 
                 private void Update()
                 {
-                    var _aspectization = this.m_Aspectization.SelectMany(_Aspect => _Aspect.Manage(this.Method).Reverse()).Where(_Advisor => _Advisor != null && _Advisor.Create != null && _Advisor.Create != Advisor.Null).Select(_Advisor => _Advisor.Create).ToArray();
+                    var _interception = this.m_Aspectization.Where(_Aspect => _Aspect is Proxy.Manager).Cast<Proxy.Manager>().ToArray();
+                    var _aspectization = this.m_Aspectization.Except(_interception).ToArray();
+                    var _addin = _aspectization.Where(_Aspect => _Aspect.GetType().GetCustomAttributes(Metadata<Aspect.Addin>.Type, true).Any()).ToArray();
+                    var _addon = _aspectization.Where(_Aspect => _Aspect.GetType().GetCustomAttributes(Metadata<Aspect.Addon>.Type, true).Any()).ToArray();
+                    var _between = _aspectization.Except(_addin).Except(_addon).ToArray();
+                    var _override = _addin.Concat(_between).Concat(_addon).Manage(this.Method).ToArray();
                     this.m_Sequence.Clear();
                     if (this.m_Factory == null)
                     {
                         var _pointer = this.m_Pointer;
-                        foreach (var _advisor in _aspectization) { _pointer = this.Decorate(_pointer, _advisor).GetFunctionPointer(); }
+                        foreach (var _advisor in _override) { _pointer = this.Decorate(_pointer, _advisor).GetFunctionPointer(); }
+                        foreach (var _proxy in _interception) { _pointer = _proxy.Override(this.Method, _pointer); }
                         this.m_Update(_pointer);
                     }
                     else
                     {
-                        if (_aspectization.Length == 0) { this.m_Factory.SetValue(null, Advisor.Null); }
-                        else { this.m_Factory.SetValue(null, new Func<IAdvice>(new Advisor.Sequence.Factory(_aspectization).Create)); }
+                        if (_override.Length == 0) { this.m_Factory.SetValue(null, Advisor.Null); }
+                        else { this.m_Factory.SetValue(null, new Func<IAdvice>(new Advisor.Sequence.Factory(_override).Create)); }
+                        var _pointer = this.m_Pointer;
+                        foreach (var _proxy in _interception) { _pointer = _proxy.Override(this.Method, _pointer); }
+                        this.m_Update(_pointer);
                     }
                 }
 

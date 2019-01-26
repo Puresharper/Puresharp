@@ -23,22 +23,22 @@ namespace Puresharp
             }
 
             public Advisor Visit<T>()
-                    where T : class, IVisitor, new()
+                    where T : class, Advisor.Parameter.IVisitor, new()
             {
                 return this.Visit(_Parameter => Singleton<T>.Value);
             }
 
-            public Advisor Visit(IVisitor visitor)
+            public Advisor Visit(Advisor.Parameter.IVisitor visitor)
             {
                 return this.Visit(_Parameter => visitor);
             }
 
-            public Advisor Visit(Func<IVisitor> visitor)
+            public Advisor Visit(Func<Advisor.Parameter.IVisitor> visitor)
             {
                 return this.Visit(_Parameter => visitor());
             }
 
-            public Advisor Visit(Func<ParameterInfo, IVisitor> visitor)
+            public Advisor Visit(Func<ParameterInfo, Advisor.Parameter.IVisitor> visitor)
             {
                 var _signature = this.m_Generator.Method.GetParameters();
                 if (!_signature.Any()) { return this.m_Generator.Around(Advisor.Null); }
@@ -63,12 +63,12 @@ namespace Puresharp
                 foreach (var _parameter in _signature)
                 {
                     _body.MarkLabel(_table[_parameter.Position]);
-                    _body.Emit(OpCodes.Ldsfld, _type.DefineField($"<{ _parameter.Name }>", Metadata<IVisitor>.Type, FieldAttributes.Static | FieldAttributes.Private));
+                    _body.Emit(OpCodes.Ldsfld, _type.DefineField($"<{ _parameter.Name }>", Metadata<Advisor.Parameter.IVisitor>.Type, FieldAttributes.Static | FieldAttributes.Private));
                     _body.Emit(OpCodes.Ldarg_1);
                     _body.Emit(OpCodes.Ldobj, _genericity);
                     _body.Emit(OpCodes.Newobj, TypeBuilder.GetConstructor(Metadata<Activator<object>>.Type.GetGenericTypeDefinition().MakeGenericType(_genericity), Metadata<Activator<object>>.Type.GetGenericTypeDefinition().GetConstructors().Single()));
                     _body.Emit(OpCodes.Call, TypeBuilder.GetMethod(Metadata<Activator<object>>.Type.GetGenericTypeDefinition().MakeGenericType(_genericity), Metadata<Activator<object>>.Type.GetGenericTypeDefinition().GetProperty(Metadata<Activator<object>>.Property(_Activator => _Activator.Activate).Name).GetGetMethod(true)));
-                    _body.Emit(OpCodes.Callvirt, Metadata<IVisitor>.Method(_Visitor => _Visitor.Visit(Metadata<Func<object>>.Value)).GetGenericMethodDefinition().MakeGenericMethod(_genericity));
+                    _body.Emit(OpCodes.Callvirt, Metadata<Advisor.Parameter.IVisitor>.Method(_Visitor => _Visitor.Visit(Metadata<Func<object>>.Value)).GetGenericMethodDefinition().MakeGenericMethod(_genericity));
                     _body.Emit(OpCodes.Ret);
                 }
                 _type.DefineMethodOverride(_method, Metadata<IAdvice>.Method(_IAdvice => _IAdvice.Argument(ref Metadata<object>.Value)).GetGenericMethodDefinition());
@@ -97,27 +97,27 @@ namespace Puresharp
             }
 
             public Advisor Visit<T>()
-                where T : class, IVisitor, new()
+                where T : class, Advisor.Parameter.IVisitor, new()
             {
                 return this.Visit((_Parameter, _Attribute) => Singleton<T>.Value);
             }
 
-            public Advisor Visit(IVisitor visitor)
+            public Advisor Visit(Advisor.Parameter.IVisitor visitor)
             {
                 return this.Visit((_Parameter, _Attribute) => visitor);
             }
 
-            public Advisor Visit(Func<IVisitor> visitor)
+            public Advisor Visit(Func<Advisor.Parameter.IVisitor> visitor)
             {
                 return this.Visit((_Parameter, _Attribute) => visitor());
             }
 
-            public Advisor Visit(Func<ParameterInfo, IVisitor> visitor)
+            public Advisor Visit(Func<ParameterInfo, Advisor.Parameter.IVisitor> visitor)
             {
                 return this.Visit((_Parameter, _Attribute) => visitor(_Parameter));
             }
 
-            public Advisor Visit(Func<ParameterInfo, T, IVisitor> visitor)
+            public Advisor Visit(Func<ParameterInfo, T, Advisor.Parameter.IVisitor> visitor)
             {
                 var _signature = this.m_Generator.Method.GetParameters();
                 if (!_signature.Any(_Parameter => Attribute<T>.On(this.m_Generator.Method, _Parameter))) { return this.m_Generator.Around(Advisor.Null); }
@@ -144,12 +144,12 @@ namespace Puresharp
                     _body.MarkLabel(_table[_parameter.Position]);
                     if (Attribute<T>.On(this.m_Generator.Method, _parameter))
                     {
-                        _body.Emit(OpCodes.Ldsfld, _type.DefineField($"<{ _parameter.Name }>", Metadata<IVisitor>.Type, FieldAttributes.Static | FieldAttributes.Private));
+                        _body.Emit(OpCodes.Ldsfld, _type.DefineField($"<{ _parameter.Name }>", Metadata<Advisor.Parameter.IVisitor>.Type, FieldAttributes.Static | FieldAttributes.Private));
                         _body.Emit(OpCodes.Ldarg_1);
                         _body.Emit(OpCodes.Ldobj, _genericity);
                         _body.Emit(OpCodes.Newobj, TypeBuilder.GetConstructor(Metadata<Activator<object>>.Type.GetGenericTypeDefinition().MakeGenericType(_genericity), Metadata<Activator<object>>.Type.GetGenericTypeDefinition().GetConstructors().Single()));
                         _body.Emit(OpCodes.Call, TypeBuilder.GetMethod(Metadata<Activator<object>>.Type.GetGenericTypeDefinition().MakeGenericType(_genericity), Metadata<Activator<object>>.Type.GetGenericTypeDefinition().GetProperty(Metadata<Activator<object>>.Property(_Activator => _Activator.Activate).Name).GetGetMethod(true)));
-                        _body.Emit(OpCodes.Callvirt, Metadata<IVisitor>.Method(_Visitor => _Visitor.Visit(Metadata<Func<object>>.Value)).GetGenericMethodDefinition().MakeGenericMethod(_genericity));
+                        _body.Emit(OpCodes.Callvirt, Metadata<Advisor.Parameter.IVisitor>.Method(_Visitor => _Visitor.Visit(Metadata<Func<object>>.Value)).GetGenericMethodDefinition().MakeGenericMethod(_genericity));
                     }
                     _body.Emit(OpCodes.Ret);
                 }

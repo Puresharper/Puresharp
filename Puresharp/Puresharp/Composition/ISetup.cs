@@ -3,15 +3,9 @@ using System.Linq.Expressions;
 
 namespace Puresharp
 {
-    public interface ISetup : IVisitable
+    public interface ISetup<T>
     {
-        LambdaExpression Activation { get; }
-        Instantiation Instantiation { get; }
-    }
-
-    public interface ISetup<T> : ISetup
-    {
-        new Expression<Func<T>> Activation { get; set; }
-        new Instantiation Instantiation { get; set; }
+        Expression<Func<T>> Activation { get; set; }
+        Instantiation Instantiation { get; set; }
     }
 }

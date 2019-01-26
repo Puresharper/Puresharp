@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "IPuresharp": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\Users\\THONGTO\\source\\repos\\ConsoleApp10\\ConsoleApp10\\bin\\Debug\\ConsoleApp10.exe\""
+    }
+  }
+}

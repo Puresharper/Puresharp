@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET452
+using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
@@ -78,3 +79,58 @@ namespace Puresharp
         }
     }
 }
+#else
+using System;
+using System.ComponentModel;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Reflection.Emit;
+
+namespace Puresharp
+{
+    [Browsable(false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    static internal class __LambdaExpression
+    {
+        static private ModuleBuilder m_Module = AppDomain.CurrentDomain.DefineDynamicModule();
+
+        static private Type CreateDelegateType(this LambdaExpression lambda)
+        {
+            var _type = __LambdaExpression.m_Module.DefineType($"Delegate{ Guid.NewGuid().ToString("N") }", TypeAttributes.Sealed | TypeAttributes.Public, Metadata<MulticastDelegate>.Type);
+            var _constructor = _type.DefineConstructor(MethodAttributes.RTSpecialName | MethodAttributes.HideBySig | MethodAttributes.Public, CallingConventions.Standard, new[] { typeof(object), Metadata<IntPtr>.Type });
+            _constructor.SetImplementationFlags(MethodImplAttributes.CodeTypeMask);
+            var _invoke = _type.DefineMethod("Invoke", MethodAttributes.HideBySig | MethodAttributes.Virtual | MethodAttributes.Public, lambda.Body.Type, lambda.Parameters.Select(_Parameter => _Parameter.Type).ToArray());
+            _invoke.SetImplementationFlags(MethodImplAttributes.CodeTypeMask);
+            for (var _index = 0; _index < lambda.Parameters.Count; _index++) { _invoke.DefineParameter(_index + 1, ParameterAttributes.None, lambda.Parameters[_index].Name); }
+            return _type.CreateType();
+        }
+
+        static public DynamicMethod CompileToMethod(this LambdaExpression lambda)
+        {
+            //FIXME : performance overhead due to lack of .net core
+            var _type = lambda.CreateDelegateType();
+            var _field = __LambdaExpression.m_Module.DefineField($"<{ Guid.NewGuid().ToString("N") }>", _type, Expression.Lambda(_type, lambda.Body, lambda.Parameters).Compile());
+            var _method = new DynamicMethod(_field.Name, MethodAttributes.Static | MethodAttributes.Public, CallingConventions.Standard, lambda.Body.Type, lambda.Parameters.Select(_Parameter => _Parameter.Type).ToArray(), __LambdaExpression.m_Module, true);
+            var _body = _method.GetILGenerator();
+            _body.Emit(OpCodes.Ldsfld, _field);
+            for (var _index = 0; _index < lambda.Parameters.Count; _index++) { _body.Emit(OpCodes.Ldarg, _index); }
+            _body.Emit(OpCodes.Call, _type.GetMethod(nameof(Action.Invoke)));
+            _body.Emit(OpCodes.Ret);
+            return _method;
+        }
+
+        static public void CompileToMethod(this LambdaExpression lambda, MethodBuilder method)
+        {
+            //FIXME : performance overhead due to lack of .net core
+            var _type = lambda.CreateDelegateType();
+            var _field = __LambdaExpression.m_Module.DefineField($"<{ Guid.NewGuid().ToString("N") }>", _type, Expression.Lambda(_type, lambda.Body, lambda.Parameters).Compile());
+            var _body = method.GetILGenerator();
+            _body.Emit(OpCodes.Ldsfld, _field);
+            for (var _index = 0; _index < lambda.Parameters.Count; _index++) { _body.Emit(OpCodes.Ldarg, _index); }
+            _body.Emit(OpCodes.Call, _type.GetMethod(nameof(Action.Invoke)));
+            _body.Emit(OpCodes.Ret);
+        }
+    }
+}
+#endif

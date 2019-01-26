@@ -4,13 +4,13 @@ using System.Reflection;
 
 namespace Puresharp
 {
-    public partial class Container
+    internal partial class Container
     {
         private class Converter : ExpressionVisitor
         {
             static private Type m_Type = typeof(Metadata<>);
             static private string m_Name = nameof(Metadata<object>.Value);
-            static private MethodInfo m_Method = Metadata<IResolver>.Method(_Resolver => _Resolver.Resolve<object>()).GetGenericMethodDefinition();
+            static private MethodInfo m_Method = Metadata<Resolver>.Method(_Resolver => _Resolver.Resolve<object>()).GetGenericMethodDefinition();
             private Expression m_Resolver;
 
             public Converter(Expression resolver)

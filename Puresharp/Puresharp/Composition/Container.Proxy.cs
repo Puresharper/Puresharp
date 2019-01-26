@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -6,7 +7,7 @@ using System.Reflection.Emit;
 
 namespace Puresharp
 {
-    public partial class Container
+    internal partial class Container
     {
         static internal class Proxy<T>
         {
@@ -14,9 +15,11 @@ namespace Puresharp
 
             static private Func<Func<Resolver, Reservation, object>, Func<Resolver, Reservation, object>> Compile()
             {
-                var _type = Composition.Module.DefineType(Declaration<T>.Value, TypeAttributes.Public | TypeAttributes.Class, Metadata<object>.Type, new Type[] { Metadata<T>.Type });
-                var _value = _type.DefineField("m_Value", Metadata<T>.Type, FieldAttributes.Private);
+                var _type = Composition.Module.DefineType($"<{ Declaration<T>.Value }>", TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.Serializable, Metadata<object>.Type, new Type[] { Metadata<T>.Type });
+                var _field = _type.DefineField("m_Value", Metadata<T>.Type, FieldAttributes.Private);
+                _field.SetCustomAttribute(new CustomAttributeBuilder(Metadata.Constructor(() => new DebuggerBrowsableAttribute(Metadata<DebuggerBrowsableState>.Value)), new object[] { DebuggerBrowsableState.Never }));
                 var _activate = _type.DefineField("m_Activate", Metadata<Func<object>>.Type, FieldAttributes.Private);
+                _activate.SetCustomAttribute(new CustomAttributeBuilder(Metadata.Constructor(() => new DebuggerBrowsableAttribute(Metadata<DebuggerBrowsableState>.Value)), new object[] { DebuggerBrowsableState.Never }));
                 var _constructor = _type.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, new Type[] { Metadata<Func<object>>.Type });
                 var _body = _constructor.GetILGenerator();
                 _body.Emit(OpCodes.Ldarg_0);
@@ -25,7 +28,29 @@ namespace Puresharp
                 _body.Emit(OpCodes.Ldarg_1);
                 _body.Emit(OpCodes.Stfld, _activate);
                 _body.Emit(OpCodes.Ret);
-                foreach (var _method in new Type[] { Metadata<T>.Type }.Concat(Metadata<T>.Type.GetInterfaces()).SelectMany(_Type => _Type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly))) { Proxy<T>.Compile(_type, _value, _activate,  _method); }
+                var _property = _type.DefineProperty("Value", PropertyAttributes.HasDefault, _field.FieldType, Type.EmptyTypes);
+                var _getter = _type.DefineMethod("get_Value", MethodAttributes.Public | MethodAttributes.SpecialName  | MethodAttributes.HideBySig, _field.FieldType, Type.EmptyTypes);
+                _body = _getter.GetILGenerator();
+                var _activated = _body.DefineLabel();
+                _body.Emit(OpCodes.Ldarg_0);
+                _body.Emit(OpCodes.Ldfld, _activate);
+                _body.Emit(OpCodes.Brfalse, _activated);
+                _body.Emit(OpCodes.Ldarg_0);
+                _body.Emit(OpCodes.Ldarg_0);
+                _body.Emit(OpCodes.Ldfld, _activate);
+                _body.Emit(OpCodes.Ldarg_0);
+                _body.Emit(OpCodes.Ldnull);
+                _body.Emit(OpCodes.Stfld, _activate);
+                _body.Emit(OpCodes.Call, Metadata<Func<object>>.Method(_Function => _Function.Invoke()));
+                _body.Emit(OpCodes.Stfld, _field);
+                _body.MarkLabel(_activated);
+                _body.Emit(OpCodes.Ldarg_0);
+                _body.Emit(OpCodes.Ldfld, _field);
+                _body.Emit(OpCodes.Ret);
+                _property.SetGetMethod(_getter);
+                _property.SetCustomAttribute(new CustomAttributeBuilder(Metadata.Constructor(() => new DebuggerBrowsableAttribute(Metadata<DebuggerBrowsableState>.Value)), new object[] { DebuggerBrowsableState.RootHidden }));
+                _type.SetCustomAttribute(new CustomAttributeBuilder(Metadata.Constructor(() => new DebuggerDisplayAttribute(Metadata<string>.Value)), new object[] { "{ this.Value, nq }" }));
+                foreach (var _method in new Type[] { Metadata<T>.Type }.Concat(Metadata<T>.Type.GetInterfaces()).SelectMany(_Type => _Type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly))) { Proxy<T>.Compile(_type, _field, _activate,  _method); }
                 if (!Metadata<IDisposable>.Type.IsAssignableFrom(Metadata<T>.Type))
                 {
                     var _method = _type.DefineMethod("IDisposable.Dispose", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Virtual);
@@ -36,15 +61,15 @@ namespace Puresharp
                     _body.Emit(OpCodes.Ldfld, _activate);
                     _body.Emit(OpCodes.Brtrue, _return);
                     _body.Emit(OpCodes.Ldarg_0);
-                    _body.Emit(OpCodes.Ldfld, _value);
+                    _body.Emit(OpCodes.Ldfld, _field);
                     _body.Emit(OpCodes.Isinst, Metadata<IDisposable>.Type);
                     _body.Emit(OpCodes.Brfalse, _return);
                     _body.Emit(OpCodes.Ldarg_0);
-                    _body.Emit(OpCodes.Ldfld, _value);
+                    _body.Emit(OpCodes.Ldfld, _field);
                     _body.Emit(OpCodes.Callvirt, Metadata<IDisposable>.Type.GetMethods().Single());
                     _body.Emit(OpCodes.Ldarg_0);
                     _body.Emit(OpCodes.Ldnull);
-                    _body.Emit(OpCodes.Stfld, _value);
+                    _body.Emit(OpCodes.Stfld, _field);
                     _body.MarkLabel(_clean);
                     _body.Emit(OpCodes.Ldarg_0);
                     _body.Emit(OpCodes.Ldnull);

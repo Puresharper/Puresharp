@@ -11,7 +11,7 @@ namespace Mono.Cecil
         {
             var _type = type.Resolve();
             if (speculative.BaseType != null && speculative.BaseType.Resolve() == _type) { return true; }
-            if (speculative.Interfaces.Any(_Type => _Type.Resolve() == _type)) { return true; }
+            if (speculative.Interfaces.Any(_Type => _Type.InterfaceType.Resolve() == _type)) { return true; }
             return false;
         }
 
@@ -24,7 +24,7 @@ namespace Mono.Cecil
         {
             if (@this == null || type == null) { return false; }
             if (@this.FullName == type.FullName && @this.Module.Name == type.Module.Name) { return true; }
-            return @this.Resolve().BaseType.Is(type) || @this.Resolve().Interfaces.Any(_Interface => _Interface.Is(type));
+            return @this.Resolve().BaseType.Is(type) || @this.Resolve().Interfaces.Any(_Interface => _Interface.InterfaceType.Is(type));
         }
     }
 }

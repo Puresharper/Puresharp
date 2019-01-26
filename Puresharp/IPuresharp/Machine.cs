@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -48,7 +44,7 @@ namespace IPuresharp
             _constructor.Body.Emit(OpCodes.Ret);
             var _move = _type.Methods.Single(_Method => _Method.Name == "MoveNext");
             var _importation = new Importation(method, _move);
-            var _task = _move.Body.Variable<Task>("<Task>");
+            var _task = _move.Body.Variable<Task>();
             var _instance = null as FieldReference;
             if (!method.IsStatic)
             {
@@ -83,19 +79,16 @@ namespace IPuresharp
             foreach (var _parameter in method.Parameters)
             {
                 var _field = null as FieldReference;
-                if (!method.IsStatic)
+                _field = _type.Fields.SingleOrDefault(_Field => _Field.Name == _parameter.Name);
+                if (_field == null)
                 {
-                    _field = _type.Fields.SingleOrDefault(_Field => _Field.Name == _parameter.Name);
-                    if (_field == null)
-                    {
-                        _field = _type.Field(_parameter.Name, FieldAttributes.Public, _importation[_parameter.ParameterType]);
-                        var _variable = method.Body.Variables.Single(_Variable => _Variable.VariableType.Resolve() == _type);
-                        method.Body.Instructions.Insert(0, Instruction.Create(OpCodes.Stfld, _genericity.Length > 0 ? new FieldReference(_field.Name, _parameter.ParameterType, _type.MakeGenericType(_genericity)) : _field));
-                        method.Body.Instructions.Insert(0, Instruction.Create(OpCodes.Ldarg, _parameter));
-                        method.Body.Instructions.Insert(0, Instruction.Create(OpCodes.Ldloc, _variable));
-                    }
-                    _field = (_field as FieldDefinition).Relative();
+                    _field = _type.Field(_parameter.Name, FieldAttributes.Public, _importation[_parameter.ParameterType]);
+                    var _variable = method.Body.Variables.Single(_Variable => _Variable.VariableType.Resolve() == _type);
+                    method.Body.Instructions.Insert(0, Instruction.Create(OpCodes.Stfld, _genericity.Length > 0 ? new FieldReference(_field.Name, _parameter.ParameterType, _type.MakeGenericType(_genericity)) : _field));
+                    method.Body.Instructions.Insert(0, Instruction.Create(OpCodes.Ldarg, _parameter));
+                    method.Body.Instructions.Insert(0, Instruction.Create(OpCodes.Ldloc, _variable));
                 }
+                _field = (_field as FieldDefinition).Relative();
                 _move.Body.Instructions.Insert(_offset++, Instruction.Create(OpCodes.Ldarg_0));
                 _move.Body.Instructions.Insert(_offset++, Instruction.Create(OpCodes.Ldfld, _advice.Relative()));
                 _move.Body.Instructions.Insert(_offset++, Instruction.Create(OpCodes.Ldarg_0));
@@ -154,8 +147,8 @@ namespace IPuresharp
                             {
                                 var _parameter = new ParameterDefinition("<Value>", ParameterAttributes.None, (_builder.FieldType as GenericInstanceType).GenericArguments[0]);
                                 _return.Parameters.Add(_parameter);
-                                var _exception = _return.Body.Variable<Exception>("<Exception>");
-                                var _disposed = _return.Body.Variable<bool>("<Invoked>");
+                                var _exception = _return.Body.Variable<Exception>();
+                                var _disposed = _return.Body.Variable<bool>();
                                 var _end = Instruction.Create(OpCodes.Ret);
                                 _return.Body.Emit(OpCodes.Ldarg_0);
                                 _return.Body.Emit(OpCodes.Ldfld, _advice.Relative());
@@ -186,6 +179,7 @@ namespace IPuresharp
                                 _method.DeclaringType = _builder.FieldType;
                                 _return.Body.Emit(OpCodes.Call, _method);
                                 _return.Body.Emit(OpCodes.Ret);
+                                _return.Body.Emit(OpCodes.Ret);
                                 _return.Body.ExceptionHandlers.Add(new ExceptionHandler(ExceptionHandlerType.Catch)
                                 {
                                     TryStart = _return.Body.Instructions[0],
@@ -200,8 +194,8 @@ namespace IPuresharp
                             }
                             else
                             {
-                                var _exception = _return.Body.Variable<Exception>("<Exception>");
-                                var _disposed = _return.Body.Variable<bool>("<Invoked>");
+                                var _exception = _return.Body.Variable<Exception>();
+                                var _disposed = _return.Body.Variable<bool>();
                                 var _end = Instruction.Create(OpCodes.Ret);
                                 _return.Body.Emit(OpCodes.Ldarg_0);
                                 _return.Body.Emit(OpCodes.Ldfld, _advice.Relative());
@@ -230,6 +224,7 @@ namespace IPuresharp
                                 _method.DeclaringType = _builder.FieldType;
                                 _return.Body.Emit(OpCodes.Call, _method);
                                 _return.Body.Emit(OpCodes.Ret);
+                                _return.Body.Emit(OpCodes.Ret);
                                 _return.Body.ExceptionHandlers.Add(new ExceptionHandler(ExceptionHandlerType.Catch)
                                 {
                                     TryStart = _return.Body.Instructions[0],
@@ -250,9 +245,9 @@ namespace IPuresharp
                             _throw.Parameters.Add(_parameter);
                             if (_builder.FieldType.IsGenericInstance)
                             {
-                                var _value = new VariableDefinition("<Value>", (_builder.FieldType as GenericInstanceType).GenericArguments[0]);
+                                var _value = new VariableDefinition((_builder.FieldType as GenericInstanceType).GenericArguments[0]);
                                 _throw.Body.Variables.Add(_value);
-                                var _disposed = _throw.Body.Variable<bool>("<Invoked>");
+                                var _disposed = _throw.Body.Variable<bool>();
                                 _throw.Body.Emit(OpCodes.Ldarg_0);
                                 _throw.Body.Emit(OpCodes.Ldfld, _advice.Relative());
                                 _throw.Body.Emit(OpCodes.Ldarg_S, _parameter);
@@ -292,6 +287,7 @@ namespace IPuresharp
                                 _throw.Body.Emit(OpCodes.Ldarg_1);
                                 _throw.Body.Emit(OpCodes.Call, _operand);
                                 _throw.Body.Emit(OpCodes.Ret);
+                                _throw.Body.Emit(OpCodes.Ret);
                                 _throw.Body.ExceptionHandlers.Add(new ExceptionHandler(ExceptionHandlerType.Catch)
                                 {
                                     TryStart = _throw.Body.Instructions[0],
@@ -303,7 +299,7 @@ namespace IPuresharp
                             }
                             else
                             {
-                                var _disposed = _throw.Body.Variable<bool>("<Invoked>");
+                                var _disposed = _throw.Body.Variable<bool>();
                                 _throw.Body.Emit(OpCodes.Ldarg_0);
                                 _throw.Body.Emit(OpCodes.Ldfld, _advice.Relative());
                                 _throw.Body.Emit(OpCodes.Ldarga_S, _parameter);
@@ -340,6 +336,7 @@ namespace IPuresharp
                                 _throw.Body.Emit(OpCodes.Ldflda, _builder);
                                 _throw.Body.Emit(OpCodes.Ldarg_1);
                                 _throw.Body.Emit(OpCodes.Call, _operand);
+                                _throw.Body.Emit(OpCodes.Ret);
                                 _throw.Body.Emit(OpCodes.Ret);
                                 _throw.Body.ExceptionHandlers.Add(new ExceptionHandler(ExceptionHandlerType.Catch)
                                 {

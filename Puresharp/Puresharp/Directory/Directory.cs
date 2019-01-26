@@ -28,11 +28,19 @@ namespace Puresharp
             }
         }
 
+        public void Remove(T item)
+        {
+            lock (this.m_Handle)
+            {
+                this.m_Archive.Remove(item);
+            }
+        }
+
         public void Accept(IVisitor<T> visitor)
         {
             lock (this.m_Handle)
             {
-                foreach (var _item in this.m_Archive) { visitor.Visit(() => _item); }
+                foreach (var _item in this.m_Archive.ToArray()) { visitor.Visit(() => _item); }
             }
         }
 
@@ -41,19 +49,19 @@ namespace Puresharp
             lock (this.m_Handle)
             {
                 this.m_Audience.Add(listener);
-                foreach (var _item in this.m_Archive) { listener.Listen(_item); }
+                foreach (var _item in this.m_Archive.ToArray()) { listener.Listen(_item); }
                 return new Audition(this, listener);
             }
         }
 
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
-            return this.m_Archive.ToList().GetEnumerator();
+            return (this.m_Archive.ToArray() as IEnumerable<T>).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.m_Archive.ToList().GetEnumerator();
+            return (this.m_Archive.ToArray() as IEnumerable<T>).GetEnumerator();
         }
     }
 }

@@ -3,7 +3,13 @@ using System.Linq.Expressions;
 
 namespace Puresharp
 {
-    internal class Setup<T> : ISetup<T>
+    internal abstract class Setup
+    {
+        abstract public void Accept(Composition.IVisitor visitor);
+    }
+
+    internal class Setup<T> : Setup, ISetup<T>
+        where T : class
     {
         private Expression<Func<T>> m_Activation;
         private Instantiation m_Instantiation;
@@ -20,20 +26,15 @@ namespace Puresharp
             set { this.m_Activation = value; }
         }
 
-        LambdaExpression ISetup.Activation
-        {
-            get { return this.m_Activation; }
-        }
-
         public Instantiation Instantiation
         {
             get { return this.m_Instantiation; }
             set { this.m_Instantiation = value; }
         }
 
-        void IVisitable.Accept(IVisitor visitor)
+        public override void Accept(Composition.IVisitor visitor)
         {
-            visitor.Visit<T>(null);
+            visitor.Visit<T>(this);
         }
     }
 }

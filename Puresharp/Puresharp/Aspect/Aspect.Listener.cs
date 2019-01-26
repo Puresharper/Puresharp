@@ -14,9 +14,10 @@ namespace Puresharp
             public Listener(Aspect aspect, Pointcut pointcut)
             {
                 this.m_Aspect = aspect;
+                this.m_Pointcut = pointcut;
                 var _listener = new Listener<MethodBase>(_Method =>
                 {
-                    if (pointcut.Match(_Method))
+                    if (this.m_Pointcut.Match(_Method))
                     {
                         aspect.Weave(_Method);
                     }

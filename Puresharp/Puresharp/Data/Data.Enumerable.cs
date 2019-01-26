@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Puresharp
 {
-    static internal partial class Data
+    static public partial class Data
     {
         internal sealed partial class Enumerable<T> : IList<T>
         {

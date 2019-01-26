@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Puresharp
 {
-    static internal partial class Data
+    static public partial class Data
     {
         internal sealed partial class Enumerable<T>
         {
@@ -17,7 +17,7 @@ namespace Puresharp
                 public Enumerator(Data.Enumerable<T> enumerable)
                 {
                     this.m_Enumerable = enumerable;
-                    this.m_Collection = m_Enumerable.m_List;
+                    this.m_Collection = this.m_Enumerable.m_List;
                     this.m_Index = -1;
                 }
 

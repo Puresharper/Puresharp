@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Reflection;
 using System.Reflection.Emit;
 
 namespace Puresharp
@@ -19,7 +18,7 @@ namespace Puresharp
         static private ModuleBuilder m_Module = AppDomain.CurrentDomain.DefineDynamicModule(Aspect.Assembly.Substring(0, Aspect.Assembly.IndexOf(',')), Aspect.Assembly.Substring(Aspect.Assembly.IndexOf('=') + 1));
         static internal ModuleBuilder Module { get { return Aspect.m_Module; } }
 
-        static private Resource m_Resource = new Resource();
+        static internal Resource Resource = new Resource();
         static private List<Aspect> m_Aspectization = new List<Aspect>();
         
         /// <summary>
@@ -29,9 +28,9 @@ namespace Puresharp
         /// <returns>Enumerable of aspects woven on method</returns>
         static public IEnumerable<Aspect> From(MethodBase method)
         {
-            lock (Aspect.m_Resource)
+            lock (Aspect.Resource)
             {
-                return Aspect.Directory.Index(method);
+                return Aspect.Directory.Index(method).Where(_Aspect => !(_Aspect is Proxy.Manager));
             }
         }
 
@@ -87,7 +86,7 @@ namespace Puresharp
         {
             this.m_Weaving = new Directory<IWeave>();
             this.m_Network = new Directory<Weave.IConnection>();
-            lock (Aspect.m_Resource)
+            lock (Aspect.Resource)
             {
                 Aspect.m_Aspectization.Add(this);
             }
@@ -97,7 +96,7 @@ namespace Puresharp
         {
             get
             {
-                lock (Aspect.m_Resource)
+                lock (Aspect.Resource)
                 {
                     return new Collection<IWeave>(this.m_Weaving);
                 }
@@ -108,7 +107,7 @@ namespace Puresharp
         {
             get
             {
-                lock (Aspect.m_Resource)
+                lock (Aspect.Resource)
                 {
                     return new Collection<Weave.IConnection>(this.m_Network);
                 }
@@ -125,7 +124,7 @@ namespace Puresharp
         private void Weave(MethodBase method)
         {
             if (method.IsAbstract) { throw new InvalidOperationException("Aspect cannot be woven to an abstract method."); }
-            lock (Aspect.m_Resource)
+            lock (Aspect.Resource)
             {
                 Aspect.Directory.Add(method, this);
                 this.m_Network.Add(new Weave.Connection(this, method));
@@ -135,7 +134,7 @@ namespace Puresharp
         private void Weave(Pointcut pointcut)
         {
             if (this.m_Dictionary.ContainsKey(pointcut)) { return; }
-            lock (Aspect.m_Resource)
+            lock (Aspect.Resource)
             {
                 this.m_Weaving.Add(new Weave(this, pointcut));
                 this.m_Dictionary.Add(pointcut, new Aspect.Listener(this, pointcut));
@@ -144,7 +143,7 @@ namespace Puresharp
         
         private void Release(MethodBase method)
         {
-            lock (Aspect.m_Resource)
+            lock (Aspect.Resource)
             {
                 Aspect.Directory.Remove(method, this);
             }
@@ -155,20 +154,11 @@ namespace Puresharp
             if (this.m_Dictionary.TryGetValue(pointcut, out var _listener))
             {
                 _listener.Dispose();
-                lock (Aspect.m_Resource)
+                lock (Aspect.Resource)
                 {
-                    this.m_Weaving.Add(new Weave(this, pointcut));
+                    foreach (var _weaving in this.m_Weaving.Where(_Weaving => _Weaving.Pointcut == pointcut).ToArray()) { this.m_Weaving.Remove(_weaving); }
                     this.m_Dictionary.Remove(pointcut);
-                    this.m_Network.Accept
-                    (
-                        new Visitor<Weave.IConnection>(_Connection =>
-                        {
-                            if (pointcut.Match(_Connection.Method) && !this.m_Dictionary.Keys.Any(_Pointcut => _Pointcut.Match(_Connection.Method)))
-                            {
-                                this.Release(_Connection.Method);
-                            }
-                        })
-                    );
+                    foreach (var _connection in this.m_Network.Where(_Connection => _Connection.Aspect == this && pointcut.Match(_Connection.Method)).ToArray()) { this.m_Network.Remove(_connection); }
                 }
             }
         }
@@ -180,7 +170,7 @@ namespace Puresharp
         public void Weave<T>()
             where T : Pointcut, new()
         {
-            lock (Aspect.m_Resource)
+            lock (Aspect.Resource)
             {
                 this.Release(Singleton<T>.Value);
                 this.Weave(Singleton<T>.Value);
@@ -194,7 +184,7 @@ namespace Puresharp
         public void Release<T>()
             where T : Pointcut, new()
         {
-            lock (Aspect.m_Resource)
+            lock (Aspect.Resource)
             {
                 this.Release(Singleton<T>.Value);
             }
@@ -205,7 +195,7 @@ namespace Puresharp
         /// </summary>
         public void Release()
         {
-            lock (Aspect.m_Resource)
+            lock (Aspect.Resource)
             {
                 this.m_Network.Accept(new Visitor<Weave.IConnection>(_Connection => this.Release(_Connection.Method)));
             }
@@ -216,7 +206,7 @@ namespace Puresharp
         /// </summary>
         public void Dispose()
         {
-            lock (Aspect.m_Resource)
+            lock (Aspect.Resource)
             {
                 Aspect.Directory.Remove(this);
                 Aspect.m_Aspectization.Remove(this);

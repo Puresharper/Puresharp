@@ -24,12 +24,14 @@ namespace Puresharp
             var _body = null as ILGenerator;
             var _genericity = null as GenericTypeParameterBuilder;
             var _table = new Label[_signature.Length];
+            var _parameters = new LinkedList<Type>();
+            var _arguments = new List<FieldBuilder>();
+            _method = _type.DefineMethod("IAdvice.Argument`1", MethodAttributes.Private | MethodAttributes.Virtual, CallingConventions.HasThis);
+            _genericity = _method.DefineGenericParameters("T")[0];
+            _method.SetParameters(_genericity.MakeByRefType());
+            _body = _method.GetILGenerator();
             if (_signature.Any())
             {
-                _method = _type.DefineMethod("IAdvice.Argument`1", MethodAttributes.Private | MethodAttributes.Virtual, CallingConventions.HasThis);
-                _genericity = _method.DefineGenericParameters("T")[0];
-                _method.SetParameters(_genericity.MakeByRefType());
-                _body = _method.GetILGenerator();
                 for (var _index = 0; _index < _signature.Length; _index++) { _table[_index] = _body.DefineLabel(); }
                 _body.Emit(OpCodes.Ldarg_0);
                 _body.Emit(OpCodes.Ldfld, _field);
@@ -41,35 +43,35 @@ namespace Puresharp
                 _body.Emit(OpCodes.Stfld, _field);
                 _body.Emit(OpCodes.Switch, _table);
                 _body.Emit(OpCodes.Ret);
+                foreach (var _parameter in _signature)
+                {
+                    var _argument = _type.DefineField("<This>", _parameter.ParameterType, FieldAttributes.Private);
+                    _parameters.AddLast(_parameter.ParameterType);
+                    _arguments.Add(_argument);
+                    _body.MarkLabel(_table[_parameter.Position]);
+                    _body.Emit(OpCodes.Ldarg_0);
+                    _body.Emit(OpCodes.Ldarg_1);
+                    _body.Emit(OpCodes.Ldobj, _genericity);
+                    _body.Emit(OpCodes.Stfld, _argument);
+                    _body.Emit(OpCodes.Ret);
+                }
             }
-            var _parameters = new LinkedList<Type>();
-            var _arguments = new List<FieldBuilder>();
-            foreach (var _parameter in _signature)
-            {
-                var _argument = _type.DefineField("<This>", _parameter.ParameterType, FieldAttributes.Private);
-                _parameters.AddLast(_parameter.ParameterType);
-                _arguments.Add(_argument);
-                _body.MarkLabel(_table[_parameter.Position]);
-                _body.Emit(OpCodes.Ldarg_0);
-                _body.Emit(OpCodes.Ldarg_1);
-                _body.Emit(OpCodes.Ldobj, _genericity);
-                _body.Emit(OpCodes.Stfld, _argument);
-                _body.Emit(OpCodes.Ret);
-            }
+            else { _body.Emit(OpCodes.Ret); }
             _type.DefineMethodOverride(_method, Metadata<IAdvice>.Method(_IAdvice => _IAdvice.Argument(ref Metadata<object>.Value)).GetGenericMethodDefinition());
+            _method = _type.DefineMethod("IAdvice.Instance`1", MethodAttributes.Private | MethodAttributes.Virtual, CallingConventions.HasThis);
+            _genericity = _method.DefineGenericParameters("T")[0];
+            _method.SetParameters(_genericity);
+            _body = _method.GetILGenerator();
             if (_instance != null)
             {
                 _parameters.AddFirst(@this.Method.DeclaringType);
-                _method = _type.DefineMethod("IAdvice.Instance`1", MethodAttributes.Private | MethodAttributes.Virtual, CallingConventions.HasThis);
-                _genericity = _method.DefineGenericParameters("T")[0];
-                _method.SetParameters(_genericity);
-                _body = _method.GetILGenerator();
                 _body.Emit(OpCodes.Ldarg_0);
                 _body.Emit(OpCodes.Ldarg_1);
                 _body.Emit(OpCodes.Stfld, _instance);
                 _body.Emit(OpCodes.Ret);
-                _type.DefineMethodOverride(_method, Metadata<IAdvice>.Method(_IAdvice => _IAdvice.Instance(Metadata<object>.Value)).GetGenericMethodDefinition());
             }
+            else { _body.Emit(OpCodes.Ret); }
+            _type.DefineMethodOverride(_method, Metadata<IAdvice>.Method(_IAdvice => _IAdvice.Instance(Metadata<object>.Value)).GetGenericMethodDefinition());
             advise(_type, _instance, _arguments);
             return @this.Around(Expression.Lambda<Func<IAdvice>>(Expression.New(_type.CreateType())).Compile());
         }

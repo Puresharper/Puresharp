@@ -5,25 +5,24 @@ using System.Linq.Expressions;
 
 namespace Puresharp
 {
-    public partial class Container
+    internal partial class Container
     {
-        private class Mapping : IVisitor, IEnumerable<Map>, IDisposable
+        private class Mapping : Composition.IVisitor, IEnumerable<Map>, IDisposable
         {
-            private IComposition m_Composition;
+            private Composition m_Composition;
             private LinkedList<Map> m_Value = new LinkedList<Map>();
 
-            public Mapping(IComposition composition)
+            public Mapping(Composition composition)
             {
                 this.m_Composition = composition;
                 this.m_Composition.Accept(this);
             }
 
-            void IVisitor.Visit<T>(Func<T> value)
+            void Composition.IVisitor.Visit<T>(ISetup<T> setup)
             {
-                var _setup = this.m_Composition.Setup<T>();
-                var _body = Expression.Convert(new Converter(Parameter<Resolver>.Expression).Visit(_setup.Activation.Body), Metadata<object>.Type);
+                var _body = Expression.Convert(new Converter(Parameter<Resolver>.Expression).Visit(setup.Activation.Body), Metadata<object>.Type);
                 var _activate = Expression.Lambda<Func<Resolver, Reservation, object>>(_body, Parameter<Resolver>.Expression, Parameter<Reservation>.Expression).Compile();
-                this.m_Value.AddLast(new Map(Metadata<T>.Type, Proxy<T>.Create(_activate), _setup.Instantiation));
+                this.m_Value.AddLast(new Map(Metadata<T>.Type, Proxy<T>.Create(_activate), setup.Activation, setup.Instantiation));
             }
             
             public void Dispose()

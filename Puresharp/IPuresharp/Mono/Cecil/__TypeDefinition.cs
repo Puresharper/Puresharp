@@ -202,7 +202,7 @@ namespace Mono.Cecil
         static public TypeReference Interface<T>(this TypeDefinition type)
         {
             var _type = type.Module.Import(typeof(T));
-            type.Interfaces.Add(_type);
+            type.Interfaces.Add(new InterfaceImplementation(_type));
             return _type;
         }
 

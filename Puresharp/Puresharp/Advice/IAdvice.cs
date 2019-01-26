@@ -13,8 +13,8 @@ namespace Puresharp
         /// Called when advice is bounded to instance method.
         /// </summary>
         /// <typeparam name="T">Type of instance</typeparam>
-        /// <param name="instance">Instance</param>
-        void Instance<T>(T instance);
+        /// <param name="value">Instance</param>
+        void Instance<T>(T value);
 
         /// <summary>
         /// Called for each argument passed.

@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
-using System.Reflection;
-using System.Reflection.Emit;
 
 namespace Puresharp
 {
@@ -16,16 +9,16 @@ namespace Puresharp
         {
             static public Collection<Aspect> Aspectization
             {
-                get { return new Collection<Aspect>(Aspect.m_Aspectization.ToArray()); }
+                get { return new Collection<Aspect>(Aspect.m_Aspectization.Where(_Aspect => !(_Aspect is Proxy.Manager)).ToArray()); }
             }
 
             static public Collection<IWeave> Weaving
             {
                 get
                 {
-                    lock (Aspect.m_Resource)
+                    lock (Aspect.Resource)
                     {
-                        return new Collection<IWeave>(Aspect.m_Aspectization.SelectMany(_Aspect => _Aspect.m_Weaving).ToArray());
+                        return new Collection<IWeave>(Aspect.m_Aspectization.Where(_Aspect => !(_Aspect is Proxy.Manager)).SelectMany(_Aspect => _Aspect.m_Weaving).ToArray());
                     }
                 }
             }
@@ -34,9 +27,9 @@ namespace Puresharp
             {
                 get
                 {
-                    lock (Aspect.m_Resource)
+                    lock (Aspect.Resource)
                     {
-                        return new Collection<Weave.IConnection>(Aspect.m_Aspectization.SelectMany(_Aspect => _Aspect.m_Network).ToArray());
+                        return new Collection<Weave.IConnection>(Aspect.m_Aspectization.Where(_Aspect => !(_Aspect is Proxy.Manager)).SelectMany(_Aspect => _Aspect.m_Network).ToArray());
                     }
                 }
             }

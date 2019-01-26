@@ -19,6 +19,14 @@ namespace Puresharp
         }
 
         [DebuggerHidden]
+        static public FieldInfo DefineField(this ModuleBuilder module, string name, Type type, object value)
+        {
+            var _field = module.DefineField(name, type);
+            _field.SetValue(null, value);
+            return _field;
+        }
+
+        [DebuggerHidden]
         static public FieldInfo DefineField<T>(this ModuleBuilder module, string name, T value)
         {
             var _field = module.DefineField(name, Metadata<T>.Type);

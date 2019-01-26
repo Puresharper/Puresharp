@@ -21,6 +21,7 @@ namespace IPuresharp
             if (type.Is<Attribute>()) { return true; }
             if (type.Is<Delegate>()) { return true; }
             if (type.Is<MulticastDelegate>()) { return true; }
+            if (type.CustomAttributes.Any(_Attribute => _Attribute.AttributeType.Name == "GeneratedCodeAttribute")) { return true; }
             return false;
         }
 
@@ -30,6 +31,7 @@ namespace IPuresharp
             if (method.Body == null) { return true; }
             if (method.IsConstructor && method.IsStatic) { return true; }
             if (method.Parameters.Any(_Parameter => _Parameter.ParameterType.IsByReference)) { return true; }
+            if (method.CustomAttributes.Any(_Attribute => _Attribute.AttributeType.Name == "GeneratedCodeAttribute")) { return true; }
             return false;
         }
     }

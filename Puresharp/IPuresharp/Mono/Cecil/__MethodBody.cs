@@ -227,19 +227,14 @@ namespace Mono.Cecil
 
         static public VariableDefinition Variable<T>(this MethodBody body)
         {
-            var _variable = new VariableDefinition(string.Concat("<", Metadata<T>.Type, ">"), body.Method.DeclaringType.Module.Import(Metadata<T>.Type));
+            var _variable = new VariableDefinition(body.Method.DeclaringType.Module.Import(Metadata<T>.Type));
             body.Variables.Add(_variable);
             return _variable;
         }
 
-        static public VariableDefinition Variable<T>(this MethodBody body, string name)
+        static public VariableDefinition Variable(this MethodBody body, TypeReference type)
         {
-            return body.Variable(name, body.Method.DeclaringType.Module.Import(Metadata<T>.Type));
-        }
-
-        static public VariableDefinition Variable(this MethodBody body, string name, TypeReference type)
-        {
-            var _variable = new VariableDefinition(name, type);
+            var _variable = new VariableDefinition(type);
             body.Variables.Add(_variable);
             return _variable;
         }

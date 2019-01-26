@@ -6,9 +6,9 @@ using System.Linq;
 
 namespace Puresharp
 {
-    static internal partial class Data
+    static public partial class Data
     {
-        public sealed partial class Collection<T> : IEnumerable<T>
+        internal sealed partial class Collection<T> : IEnumerable<T>
         {
             static public implicit operator T[] (Data.Collection<T> collection)
             {
@@ -83,7 +83,7 @@ namespace Puresharp
 
         [DebuggerDisplay("Count = {this.Count, nq}")]
         [DebuggerTypeProxy(typeof(Data.Collection<>.Debugger))]
-        public sealed partial class Collection<T>
+        internal sealed partial class Collection<T>
         {
             private sealed class Debugger
             {
@@ -110,7 +110,7 @@ namespace Puresharp
             }
         }
 
-        public partial class Collection<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>
+        internal partial class Collection<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>
         {
             static public implicit operator Data.Map<TKey, TValue>(Data.Collection<TKey, TValue> collection)
             {

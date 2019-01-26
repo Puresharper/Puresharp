@@ -1,0 +1,623 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Puresharp</name>
+    </assembly>
+    <members>
+        <member name="T:Puresharp.Advice">
+            <summary>
+            Advice.
+            </summary>
+        </member>
+        <member name="T:Puresharp.IAdvice">
+            <summary>
+            Advice.
+            </summary>
+        </member>
+        <member name="M:Puresharp.IAdvice.Instance``1(``0)">
+            <summary>
+            Called when advice is bounded to instance method.
+            </summary>
+            <typeparam name="T">Type of instance</typeparam>
+            <param name="value">Instance</param>
+        </member>
+        <member name="M:Puresharp.IAdvice.Argument``1(``0@)">
+            <summary>
+            Called for each argument passed.
+            </summary>
+            <typeparam name="T">Type of argument</typeparam>
+            <param name="value">Value</param>
+        </member>
+        <member name="M:Puresharp.IAdvice.Begin">
+            <summary>
+            Called before calling targeted method
+            </summary>
+        </member>
+        <member name="M:Puresharp.IAdvice.Await(System.Reflection.MethodInfo,System.Threading.Tasks.Task)">
+            <summary>
+            Called when method start awaiting asynchronous method without return value.
+            </summary>
+            <param name="method">Asynchronous method</param>
+            <param name="task">Task</param>
+        </member>
+        <member name="M:Puresharp.IAdvice.Await``1(System.Reflection.MethodInfo,System.Threading.Tasks.Task{``0})">
+            <summary>
+            Called when method start awaiting asynchronous method with a return value.
+            </summary>
+            <typeparam name="T">Type of return of the asynchronous method</typeparam>
+            <param name="method">Asynchronous method</param>
+            <param name="task">Task</param>
+        </member>
+        <member name="M:Puresharp.IAdvice.Continue">
+            <summary>
+            Called when awaiting asynchronous method end.
+            </summary>
+        </member>
+        <member name="M:Puresharp.IAdvice.Throw(System.Exception@)">
+            <summary>
+            Called when method execution without return value throw an exception.
+            </summary>
+            <param name="exception">Exception</param>
+        </member>
+        <member name="M:Puresharp.IAdvice.Throw``1(System.Exception@,``0@)">
+            <summary>
+            Called when method execution with a return value throw an exception.
+            </summary>
+            <typeparam name="T">Type of return value</typeparam>
+            <param name="exception">Exception</param>
+            <param name="value">Return value</param>
+        </member>
+        <member name="M:Puresharp.IAdvice.Return">
+            <summary>
+            Called when method execution end without return value.
+            </summary>
+        </member>
+        <member name="M:Puresharp.IAdvice.Return``1(``0@)">
+            <summary>
+            Called when method execution with a return value end.
+            </summary>
+            <typeparam name="T">Type of return value</typeparam>
+            <param name="value">Return value</param>
+        </member>
+        <member name="T:Puresharp.Advisor">
+            <summary>
+            Advisor used to advise a method.
+            </summary>
+        </member>
+        <member name="P:Puresharp.Advisor.Null">
+            <summary>
+            Null advisor that can create advice doing nothing.
+            </summary>
+        </member>
+        <member name="T:Puresharp.Aspect">
+            <summary>
+            Aspect.
+            </summary>
+        </member>
+        <member name="T:Puresharp.Aspect.Addin">
+            <summary>
+            Specifies that the aspect should behave as an addin.
+            </summary>
+        </member>
+        <member name="T:Puresharp.Aspect.Addon">
+            <summary>
+            Specifies that the aspect should behave as an addon.
+            </summary>
+        </member>
+        <member name="M:Puresharp.Aspect.From(System.Reflection.MethodBase)">
+            <summary>
+            Enumerate all aspects woven on a method.
+            </summary>
+            <param name="method">Method</param>
+            <returns>Enumerable of aspects woven on method</returns>
+        </member>
+        <member name="M:Puresharp.Aspect.Equals(System.Object,System.Object)">
+            <summary>
+            Equals.
+            </summary>
+            <param name="left">Left</param>
+            <param name="right">Right</param>
+            <returns>Equals</returns>
+        </member>
+        <member name="M:Puresharp.Aspect.ReferenceEquals(System.Object,System.Object)">
+            <summary>
+            ReferenceEquals.
+            </summary>
+            <param name="left">Left</param>
+            <param name="right">Right</param>
+            <returns>Equals</returns>
+        </member>
+        <member name="M:Puresharp.Aspect.#ctor">
+            <summary>
+            Create an aspect.
+            </summary>
+        </member>
+        <member name="M:Puresharp.Aspect.Manage(System.Reflection.MethodBase)">
+            <summary>
+            Advise a method.
+            </summary>
+            <param name="method">Method to advise</param>
+            <returns>Advisors dedicated to method to advise</returns>
+        </member>
+        <member name="M:Puresharp.Aspect.Weave``1">
+            <summary>
+            Weave an aspect on a pointcut.
+            </summary>
+            <typeparam name="T">Pointcut</typeparam>
+        </member>
+        <member name="M:Puresharp.Aspect.Release``1">
+            <summary>
+            Remove aspect from pointcut.
+            </summary>
+            <typeparam name="T">Pointcut</typeparam>
+        </member>
+        <member name="M:Puresharp.Aspect.Release">
+            <summary>
+            Remove aspect from all methods.
+            </summary>
+        </member>
+        <member name="M:Puresharp.Aspect.Dispose">
+            <summary>
+            Dispose aspect and remove it from all methods.
+            </summary>
+        </member>
+        <member name="T:Puresharp.Composition">
+            <summary>
+            Composition.
+            </summary>
+        </member>
+        <member name="M:Puresharp.Composition.#ctor">
+            <summary>
+            Create a composition.
+            </summary>
+        </member>
+        <member name="M:Puresharp.Composition.Setup``1">
+            <summary>
+            Try get setup for specific module.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns>Setup</returns>
+        </member>
+        <member name="M:Puresharp.Composition.Setup``1(System.Linq.Expressions.Expression{System.Func{``0}},Puresharp.Instantiation)">
+            <summary>
+            Setup specific module by specifying how to create implementation of module.
+            </summary>
+            <typeparam name="T">Type of module</typeparam>
+            <param name="activation">Way to create implementation</param>
+            <param name="instantiation">Type of instantiation to setup</param>
+            <returns>This</returns>
+        </member>
+        <member name="M:Puresharp.Composition.Setup``1(System.Linq.Expressions.Expression{System.Func{``0}})">
+            <summary>
+            Setup specific multiton module by specifying how to create implementation of module.
+            </summary>
+            <typeparam name="T">Type of module</typeparam>
+            <param name="activation">Way to create implementation</param>
+            <returns>This</returns>
+        </member>
+        <member name="M:Puresharp.Composition.Then(Puresharp.Composition)">
+            <summary>
+            Include a fallback composition.
+            </summary>
+            <param name="composition">Fallback</param>
+            <returns>Composition</returns>
+        </member>
+        <member name="M:Puresharp.Composition.Materialize">
+            <summary>
+            Create a container based on this composition.
+            </summary>
+            <returns>Container</returns>
+        </member>
+        <member name="T:Puresharp.Container">
+            <summary>
+            Container.
+            </summary>
+        </member>
+        <member name="M:Puresharp.Container.#ctor(Puresharp.Composition)">
+            <summary>
+            Create a container based on composition.
+            </summary>
+            <param name="composition">Composition</param>
+        </member>
+        <member name="M:Puresharp.Container.Module``1">
+            <summary>
+            Instantiate a module.
+            </summary>
+            <typeparam name="T">Type of module</typeparam>
+            <returns>Module</returns>
+        </member>
+        <member name="M:Puresharp.Container.Dispose">
+            <summary>
+            Dispose container.
+            </summary>
+        </member>
+        <member name="T:Puresharp.Instantiation">
+            <summary>
+            Defines the instantiation strategy of an object.
+            </summary>
+        </member>
+        <member name="F:Puresharp.Instantiation.Volatile">
+            <summary>
+            Always istantiate a new instance.
+            </summary>
+        </member>
+        <member name="F:Puresharp.Instantiation.Multiton">
+            <summary>
+            Instantiate a new instance for each container.
+            </summary>
+        </member>
+        <member name="F:Puresharp.Instantiation.Singleton">
+            <summary>
+            Unique instance for whole composition.
+            </summary>
+        </member>
+        <member name="T:Puresharp.Metadata">
+            <summary>
+            Metadata.
+            </summary>
+        </member>
+        <member name="F:Puresharp.Metadata.Void">
+            <summary>
+            Void.
+            </summary>
+        </member>
+        <member name="M:Puresharp.Metadata.Constructor``1(System.Linq.Expressions.Expression{System.Func{``0}})">
+            <summary>
+            Obtain constructor from linq expression.
+            </summary>
+            <typeparam name="T">Type</typeparam>
+            <param name="expression">Expression</param>
+            <returns>Constructor</returns>
+        </member>
+        <member name="M:Puresharp.Metadata.Field``1(System.Linq.Expressions.Expression{System.Func{``0}})">
+            <summary>
+            Obtain static field from linq expression.
+            </summary>
+            <typeparam name="T">Type</typeparam>
+            <param name="expression">Expression</param>
+            <returns>Field</returns>
+        </member>
+        <member name="M:Puresharp.Metadata.Property``1(System.Linq.Expressions.Expression{System.Func{``0}})">
+            <summary>
+            Obtain static property from linq expression.
+            </summary>
+            <typeparam name="T">Type</typeparam>
+            <param name="expression">Expression</param>
+            <returns>PropertyInfo</returns>
+        </member>
+        <member name="M:Puresharp.Metadata.Method(System.Linq.Expressions.Expression{System.Action})">
+            <summary>
+            Obtain static method from linq expression.
+            </summary>
+            <param name="expression">Expression</param>
+            <returns>Method</returns>
+        </member>
+        <member name="M:Puresharp.Metadata.Method``1(System.Linq.Expressions.Expression{System.Func{``0}})">
+            <summary>
+            Obtain static method from linq expression.
+            </summary>
+            <typeparam name="T">Type</typeparam>
+            <param name="expression">Expression</param>
+            <returns>Method</returns>
+        </member>
+        <member name="M:Puresharp.Metadata.Equals(System.Object,System.Object)">
+            <summary>
+            Determines whether the specified object instances are considered equal.
+            </summary>
+            <param name="left">left</param>
+            <param name="right">right</param>
+            <returns>Boolean</returns>
+        </member>
+        <member name="M:Puresharp.Metadata.ReferenceEquals(System.Object,System.Object)">
+            <summary>
+            Determines whether the specified object instances are the same instance.
+            </summary>
+            <param name="left">left</param>
+            <param name="right">right</param>
+            <returns>Boolean</returns>
+        </member>
+        <member name="T:Puresharp.Metadata`1">
+            <summary>
+            Metadata.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:Puresharp.Metadata`1.Type">
+            <summary>
+            Type.
+            </summary>
+        </member>
+        <member name="M:Puresharp.Metadata`1.Field``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
+            <summary>
+            Obtain field from linq expression.
+            </summary>
+            <typeparam name="TValue">Type</typeparam>
+            <param name="expression">Expression</param>
+            <returns>Field</returns>
+        </member>
+        <member name="M:Puresharp.Metadata`1.Property``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
+            <summary>
+            Obtain property from linq expression.
+            </summary>
+            <typeparam name="TValue">Type</typeparam>
+            <param name="expression">Expression</param>
+            <returns>Property</returns>
+        </member>
+        <member name="M:Puresharp.Metadata`1.Method(System.Linq.Expressions.Expression{System.Action{`0}})">
+            <summary>
+            Obtain method from linq expression.
+            </summary>
+            <param name="expression">Expression</param>
+            <returns>Method</returns>
+        </member>
+        <member name="M:Puresharp.Metadata`1.Method``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
+            <summary>
+            Obtain method from linq expression.
+            </summary>
+            <typeparam name="TReturn">Type</typeparam>
+            <param name="expression">Expression</param>
+            <returns>Method</returns>
+        </member>
+        <member name="M:Puresharp.Metadata`1.Equals(System.Object,System.Object)">
+            <summary>
+            Determines whether the specified object instances are considered equal.
+            </summary>
+            <param name="left">left</param>
+            <param name="right">right</param>
+            <returns>Boolean</returns>
+        </member>
+        <member name="M:Puresharp.Metadata`1.ReferenceEquals(System.Object,System.Object)">
+            <summary>
+            Determines whether the specified object instances are the same instance.
+            </summary>
+            <param name="left">left</param>
+            <param name="right">right</param>
+            <returns>Boolean</returns>
+        </member>
+        <member name="T:Puresharp.Pointcut">
+            <summary>
+            Pointcut.
+            </summary>
+        </member>
+        <member name="M:Puresharp.Pointcut.Match(System.Reflection.MethodBase)">
+            <summary>
+            Indicate if method is in pointcut scope.
+            </summary>
+            <param name="method">Method</param>
+            <returns>True if method is in pointcut scope</returns>
+        </member>
+        <member name="M:Puresharp.Pointcut.Accept(Puresharp.IVisitor{System.Reflection.MethodBase})">
+            <summary>
+            Visit methods currently match with pointcut predicate.
+            </summary>
+            <param name="visitor">Visitor</param>
+        </member>
+        <member name="M:Puresharp.Pointcut.Accept(Puresharp.IListener{System.Reflection.MethodBase})">
+            <summary>
+            Listen methods that match with this pointcut predicate.
+            </summary>
+            <param name="listener">Listener</param>
+            <returns>Audition</returns>
+        </member>
+        <member name="M:Puresharp.Pointcut.GetEnumerator">
+            <summary>
+            Get an enumerator to enumerate methods that currently match with this pointcut predicate.
+            </summary>
+            <returns>Methods that currently match with this pointcut predicate.</returns>
+        </member>
+        <member name="T:Puresharp.Pointcut`1">
+            <summary>
+            Pointcut that target all methods with a specific attribute.
+            </summary>
+            <typeparam name="T">Type of attribute used to identify a type of method</typeparam>
+        </member>
+        <member name="M:Puresharp.Pointcut`1.Match(System.Reflection.MethodBase)">
+            <summary>
+            Indicate if method is in pointcut scope.
+            </summary>
+            <param name="method">Method</param>
+            <returns>True if method is in pointcut scope</returns>
+        </member>
+        <member name="T:Puresharp.Pointcut`2">
+            <summary>
+            Pointcut based on attributes junction.
+            </summary>
+            <typeparam name="T1">Attribute 1</typeparam>
+            <typeparam name="T2">Attribute 2</typeparam>
+        </member>
+        <member name="M:Puresharp.Pointcut`2.Match(System.Reflection.MethodBase)">
+            <summary>
+            Indicate if method is in pointcut scope.
+            </summary>
+            <param name="method">Method</param>
+            <returns>True if method is in pointcut scope</returns>
+        </member>
+        <member name="T:Puresharp.Pointcut`3">
+            <summary>
+            Pointcut based on attributes junction.
+            </summary>
+            <typeparam name="T1">Attribute 1</typeparam>
+            <typeparam name="T2">Attribute 2</typeparam>
+            <typeparam name="T3">Attribute 3</typeparam>
+        </member>
+        <member name="M:Puresharp.Pointcut`3.Match(System.Reflection.MethodBase)">
+            <summary>
+            Indicate if method is in pointcut scope.
+            </summary>
+            <param name="method">Method</param>
+            <returns>True if method is in pointcut scope</returns>
+        </member>
+        <member name="T:Puresharp.Pointcut`4">
+            <summary>
+            Pointcut based on attributes junction.
+            </summary>
+            <typeparam name="T1">Attribute 1</typeparam>
+            <typeparam name="T2">Attribute 2</typeparam>
+            <typeparam name="T3">Attribute 3</typeparam>
+            <typeparam name="T4">Attribute 4</typeparam>
+        </member>
+        <member name="M:Puresharp.Pointcut`4.Match(System.Reflection.MethodBase)">
+            <summary>
+            Indicate if method is in pointcut scope.
+            </summary>
+            <param name="method">Method</param>
+            <returns>True if method is in pointcut scope</returns>
+        </member>
+        <member name="T:Puresharp.Pointcut`5">
+            <summary>
+            Pointcut based on attributes junction.
+            </summary>
+            <typeparam name="T1">Attribute 1</typeparam>
+            <typeparam name="T2">Attribute 2</typeparam>
+            <typeparam name="T3">Attribute 3</typeparam>
+            <typeparam name="T4">Attribute 4</typeparam>
+            <typeparam name="T5">Attribute 5</typeparam>
+        </member>
+        <member name="M:Puresharp.Pointcut`5.Match(System.Reflection.MethodBase)">
+            <summary>
+            Indicate if method is in pointcut scope.
+            </summary>
+            <param name="method">Method</param>
+            <returns>True if method is in pointcut scope</returns>
+        </member>
+        <member name="T:Puresharp.Pointcut`6">
+            <summary>
+            Pointcut based on attributes junction.
+            </summary>
+            <typeparam name="T1">Attribute 1</typeparam>
+            <typeparam name="T2">Attribute 2</typeparam>
+            <typeparam name="T3">Attribute 3</typeparam>
+            <typeparam name="T4">Attribute 4</typeparam>
+            <typeparam name="T5">Attribute 5</typeparam>
+            <typeparam name="T6">Attribute 6</typeparam>
+        </member>
+        <member name="M:Puresharp.Pointcut`6.Match(System.Reflection.MethodBase)">
+            <summary>
+            Indicate if method is in pointcut scope.
+            </summary>
+            <param name="method">Method</param>
+            <returns>True if method is in pointcut scope</returns>
+        </member>
+        <member name="T:Puresharp.Pointcut`7">
+            <summary>
+            Pointcut based on attributes junction.
+            </summary>
+            <typeparam name="T1">Attribute 1</typeparam>
+            <typeparam name="T2">Attribute 2</typeparam>
+            <typeparam name="T3">Attribute 3</typeparam>
+            <typeparam name="T4">Attribute 4</typeparam>
+            <typeparam name="T5">Attribute 5</typeparam>
+            <typeparam name="T6">Attribute 6</typeparam>
+            <typeparam name="T7">Attribute 7</typeparam>
+        </member>
+        <member name="M:Puresharp.Pointcut`7.Match(System.Reflection.MethodBase)">
+            <summary>
+            Indicate if method is in pointcut scope.
+            </summary>
+            <param name="method">Method</param>
+            <returns>True if method is in pointcut scope</returns>
+        </member>
+        <member name="T:Puresharp.Pointcut`8">
+            <summary>
+            Pointcut based on attributes junction.
+            </summary>
+            <typeparam name="T1">Attribute 1</typeparam>
+            <typeparam name="T2">Attribute 2</typeparam>
+            <typeparam name="T3">Attribute 3</typeparam>
+            <typeparam name="T4">Attribute 4</typeparam>
+            <typeparam name="T5">Attribute 5</typeparam>
+            <typeparam name="T6">Attribute 6</typeparam>
+            <typeparam name="T7">Attribute 7</typeparam>
+            <typeparam name="T8">Attribute 8</typeparam>
+            <typeparam name="T9">Attribute 9</typeparam>
+        </member>
+        <member name="M:Puresharp.Pointcut`8.Match(System.Reflection.MethodBase)">
+            <summary>
+            Indicate if method is in pointcut scope.
+            </summary>
+            <param name="method">Method</param>
+            <returns>True if method is in pointcut scope</returns>
+        </member>
+        <member name="T:Puresharp.Pointcut`9">
+            <summary>
+            Pointcut based on attributes junction.
+            </summary>
+            <typeparam name="T1">Attribute 1</typeparam>
+            <typeparam name="T2">Attribute 2</typeparam>
+            <typeparam name="T3">Attribute 3</typeparam>
+            <typeparam name="T4">Attribute 4</typeparam>
+            <typeparam name="T5">Attribute 5</typeparam>
+            <typeparam name="T6">Attribute 6</typeparam>
+            <typeparam name="T7">Attribute 7</typeparam>
+            <typeparam name="T8">Attribute 8</typeparam>
+            <typeparam name="T9">Attribute 9</typeparam>
+        </member>
+        <member name="M:Puresharp.Pointcut`9.Match(System.Reflection.MethodBase)">
+            <summary>
+            Indicate if method is in pointcut scope.
+            </summary>
+            <param name="method">Method</param>
+            <returns>True if method is in pointcut scope</returns>
+        </member>
+        <member name="T:Puresharp.Runtime">
+            <summary>
+            Runtime.
+            </summary>
+        </member>
+        <member name="F:Puresharp.Runtime.Void">
+            <summary>
+            Void.
+            </summary>
+        </member>
+        <member name="T:Puresharp.Instruction">
+            <summary>
+            CIL Instruction.
+            </summary>
+        </member>
+        <member name="F:Puresharp.Instruction.Code">
+            <summary>
+            Code.
+            </summary>
+        </member>
+        <member name="F:Puresharp.Instruction.Type">
+            <summary>
+            Type.
+            </summary>
+        </member>
+        <member name="F:Puresharp.Instruction.Value">
+            <summary>
+            Value.
+            </summary>
+        </member>
+        <member name="M:Puresharp.Instruction.#ctor(System.Reflection.Emit.OpCode)">
+            <summary>
+            Create an instruction without value.
+            </summary>
+            <param name="code"></param>
+        </member>
+        <member name="M:Puresharp.Instruction.ToString">
+            <summary>
+            Instruction illustration.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Puresharp.Instruction`1">
+            <summary>
+            Instruction
+            </summary>
+            <typeparam name="T">Type</typeparam>
+        </member>
+        <member name="F:Puresharp.Instruction`1.Value">
+            <summary>
+            Value.
+            </summary>
+        </member>
+        <member name="M:Puresharp.Instruction`1.#ctor(System.Reflection.Emit.OpCode,`0)">
+            <summary>
+            Create an instruction.
+            </summary>
+            <param name="code">Code</param>
+            <param name="value">Value</param>
+        </member>
+    </members>
+</doc>
