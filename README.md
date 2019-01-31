@@ -80,7 +80,7 @@ Setup composition for IA, IB, IC whith respectivily A, B, C
     
 Create a container from composition setup
 
-    var _container = new Container(_composition);
+    var _container = _composition.Materialize();
 
 Instantiate a module of IA from container
 
